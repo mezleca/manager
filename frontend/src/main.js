@@ -27,5 +27,11 @@ expand_buttons.forEach((btn, index) => {
     });
 });
 
+// remove it until i implement window movement with chromeless mode
+document.querySelector(".window-controls").style.display = "none";
+
 // setup message handler
 window.external.receiveMessage(Ipc.handleMessage);
+
+// disable page zoom
+window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });

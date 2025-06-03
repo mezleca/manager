@@ -1,8 +1,4 @@
-﻿using Photino.NET;
-using System.Drawing;
-using System.Text;
-
-namespace Main
+﻿namespace Main
 {
     public class Manager
     {

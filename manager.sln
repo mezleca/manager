@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuManager", "OsuManager.csproj", "{13035BC3-1DD0-059F-8A75-E376AB70BE5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuManager", "OsuManager.csproj", "{C4F1A529-F737-1D18-D705-5BE7DE9B71E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +10,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{13035BC3-1DD0-059F-8A75-E376AB70BE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13035BC3-1DD0-059F-8A75-E376AB70BE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13035BC3-1DD0-059F-8A75-E376AB70BE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13035BC3-1DD0-059F-8A75-E376AB70BE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F1A529-F737-1D18-D705-5BE7DE9B71E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F1A529-F737-1D18-D705-5BE7DE9B71E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F1A529-F737-1D18-D705-5BE7DE9B71E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F1A529-F737-1D18-D705-5BE7DE9B71E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3BE34E92-B7EA-46DF-A50D-F50CC66DDFFA}
+		SolutionGuid = {E1C87F3D-981B-4BC7-BD32-C71C6AC32E7E}
 	EndGlobalSection
 EndGlobal

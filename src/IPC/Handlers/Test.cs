@@ -1,22 +1,30 @@
-using System;
 using MessagePack;
+namespace IPC.Handlers;
 
-namespace IPC
+public class Test
 {
-
     [MessagePackObject]
-    class TestRequest
+    public class Request
     {
         [Key("content")]
-        public required string? Content { get; set; } 
+        public required string? Content { get; set; }
     }
 
     [MessagePackObject]
-    class TestResponse
+    public class Response
     {
         [Key("success")]
         public bool Success { get; set; }
         [Key("content")]
-        public string Content { get; set; } 
+        public required string Content { get; set; }
+    }
+
+    static public async Task Handle(int id, Request request)
+    {
+        await MessageHandler.Send(id, "test", new Response
+        {
+            Success = true,
+            Content = "Hello World"
+        });
     }
 }

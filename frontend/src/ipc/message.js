@@ -60,7 +60,7 @@ class MessageBus {
                 this.pending.get(response_type)(message);
 
                 // reset message id if needed
-                if (this.pending.size == 0) {
+                if (this.pending.size === 0) {
                     this.message_id = 0;
                 }
 

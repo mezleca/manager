@@ -1,87 +1,92 @@
 class MessageBus {
+
     constructor() {
         this.handlers = new Map();
         this.message_id = 0;
         this.pending = new Map();
     }
-    
+   
     on = (message_type, handler) => {
+
         if (!this.handlers.has(message_type)) {
             this.handlers.set(message_type, []);
         }
+
         this.handlers.get(message_type).push(handler);
     }
-    
-    send = async (message_type, data, will_send) => {
-        const message_data = {
-            id: this.message_id++,
-            type: message_type,
-            send: will_send || false,
-            data: msgpack.encode(data || {})
-        };
-        
-        const serialized = msgpack.encode(message_data);
-        const base64 = btoa(String.fromCharCode(...new Uint8Array(serialized)));
-        
-        window.external.sendMessage(base64);
-    }
-    
-    sendAndWait = async (message_type, data, timeout = 5000) => {
+   
+    send = async (message_type, data, timeout_ms = 5000) => {
 
+        const request_id = ++this.message_id;
+        const response_key = `${message_type}_${request_id}`;
+        
         return new Promise((resolve, reject) => {
-
             const timer = setTimeout(() => {
-                this.pending.delete(message_type);
-                reject(new Error("timeout"));
-            }, timeout);
-            
-            this.pending.set(`${message_type}_${this.message_id}`, (response) => {
+                this.pending.delete(response_key);
+                reject(new Error(`timeout waiting for ${message_type}`));
+            }, timeout_ms);
+           
+            this.pending.set(response_key, (response) => {
                 clearTimeout(timer);
+                this.pending.delete(response_key);
                 resolve(response);
             });
-            
-            this.send(message_type, data, true);
+           
+            const message_data = {
+                id: request_id,
+                type: message_type,
+                send: true,
+                data: msgpack.encode(data || {})
+            };
+           
+            const serialized = msgpack.encode(message_data);
+            const base64 = btoa(String.fromCharCode(...new Uint8Array(serialized)));
+           
+            window.external.sendMessage(base64);
         });
     }
-    
-    handleMessage = (rawMessage) => {
+   
+    handle_message = (raw_message) => {
 
         try {
 
-            const data = Uint8Array.from(atob(rawMessage), c => c.charCodeAt(0));
+            const data = Uint8Array.from(atob(raw_message), c => c.charCodeAt(0));
             const message_data = msgpack.decode(data);
+            const decoded_message = msgpack.decode(message_data.data);
+            
+            const response_key = `${message_data.type}_${message_data.id}`;
 
-            const message = msgpack.decode(message_data.data);
-            const response_type = `${message_data.type}_${message_data.id}`;
-
-            console.log(response_type);
-
-            if (this.pending.has(response_type)) {
-                
-                // execute the handler callback
-                this.pending.get(response_type)(message);
-
-                // reset message id if needed
-                if (this.pending.size === 0) {
-                    this.message_id = 0;
-                }
-
-                this.pending.delete(response_type);
+            if (this.pending.has(response_key)) {
+                this.pending.get(response_key)(decoded_message);
                 return;
             }
-            
-            const handlers = this.handlers.get(response_type);
+           
+            const handlers = this.handlers.get(message_data.type);
 
             if (handlers) {
-                for (let handler of handlers) {
-                    handler(message);
+                for (const handler of handlers) {
+                    handler(decoded_message, message_data.id);
                 }
             }
-
         } catch (error) {
-            console.error('processing error', error);
+            console.error('message processing error:', error);
         }
+    }
+    
+    send_response = async (response_id, message_type, data) => {
+
+        const message_data = {
+            id: response_id,
+            type: message_type,
+            send: false,
+            data: msgpack.encode(data || {})
+        };
+       
+        const serialized = msgpack.encode(message_data);
+        const base64 = btoa(String.fromCharCode(...new Uint8Array(serialized)));
+       
+        window.external.sendMessage(base64);
     }
 }
 
-export const Ipc = new MessageBus();
+export const ipc = new MessageBus();

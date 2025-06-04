@@ -1,4 +1,4 @@
-import { Ipc } from "./ipc/message.js";
+import { ipc } from "./ipc/message.js";
 
 const tabs = document.querySelectorAll(".tab");
 const tab_contents = document.querySelectorAll(".tab-content");
@@ -31,15 +31,15 @@ expand_buttons.forEach((btn, index) => {
 document.querySelector(".window-controls").style.display = "none";
 
 // setup message handler
-window.external.receiveMessage(Ipc.handleMessage);
+window.external.receiveMessage(ipc.handle_message);
 
 // disable page zoom
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
 
 (async () => {
-	await Ipc.sendAndWait("update_config", { stable_path: "O:\\" });
 	console.log("initialized config");
-	await Ipc.sendAndWait("initialize_collections", {});
-	const collection = await Ipc.sendAndWait("get_collection", { name: "mzle" });
+	await ipc.send("update_config", { stable_path: "O:\\" });
+	await ipc.send("load_collections", {});
+	const collection = await ipc.send("get_collection", { name: "mzle" });
 	console.log(collection);
 })();

@@ -32,16 +32,12 @@ public class Window
 
     private static void SetupHandlers()
     {
-        var messageHandler = new MessageHandler();
+        var bus = new MessageBus();
 
-        messageHandler.RegisterHandler<TestHandler.Request>("test", TestHandler.Handle);
-        messageHandler.RegisterHandler<CollectionHandler.CLRequest>("get_collection", CollectionHandler.HandleGet);
-        messageHandler.RegisterHandler<CollectionHandler.InitRequest>("initialize_collections", CollectionHandler.HandleInitialize);
-        messageHandler.RegisterHandler<ConfigHandler.Request>("update_config", ConfigHandler.HandleConfigUpdate);
+        bus.RegisterHandler(new GetCollectionHandler());
+        bus.RegisterHandler(new ReloadCollectionHandler());
+        bus.RegisterHandler(new UpdateConfigHandler());
 
-        window?.RegisterWebMessageReceivedHandler((sender, message) =>
-        {
-            _ = Task.Run(() => messageHandler.HandleMessage(message));
-        });
+        window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }
 }

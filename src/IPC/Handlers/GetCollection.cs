@@ -14,7 +14,7 @@ public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, Collec
 
     protected override async Task<CollectionRespose> ProcessRequest(CollectionRequest request)
     {
-        var collection = Manager.GetStableCollection(request.Name);
+        var collection = Manager.GetCollection(request.Name);
 
         if (collection == null) {
             return new CollectionRespose { Found = false };

@@ -24,4 +24,5 @@ public class ConfigData
     public string? StablePath { get; set; }
     public string? StableSongsPath { get; set; }
     public string? AccessToken { get; set; }
+    public bool? Lazer { get; set; }
 }

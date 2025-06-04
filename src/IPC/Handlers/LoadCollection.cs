@@ -9,7 +9,7 @@ public class ReloadCollectionHandler : IMessageHandler<LoadCollectionResponse>
 
     public async Task Handle(int id, bool send, LoadCollectionResponse data)
     {
-        await Manager.LoadStableCollection();
+        await Manager.LoadCollection();
     }
 }
 

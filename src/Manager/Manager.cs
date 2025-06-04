@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 namespace Main.Manager;
 
 public class Manager
@@ -5,16 +7,18 @@ public class Manager
     public static StableCollectionFile? stable_collection;
     public static bool loaded = false;
 
-    public static Task<bool> LoadStableCollection()
+    public static Task<bool> LoadCollection()
     {
-        if (string.IsNullOrEmpty(Config.StablePath)) {
+        if (string.IsNullOrEmpty(Config.StablePath))
+        {
             Console.WriteLine("path is null");
             return Task.FromResult(false);
         }
 
         byte[] data = File.ReadAllBytes($"{Config.StablePath}/collection.db");
 
-        if (data.Length == 0) {
+        if (data.Length == 0)
+        {
             Console.WriteLine("invalid buffer");
             return Task.FromResult(false);
         }
@@ -24,19 +28,24 @@ public class Manager
         return Task.FromResult(true);
     }
 
-    public static StableCollection? GetStableCollection(string name)
+    public static StableCollection? GetCollection(string name)
     {
         var stable_path = Config.StablePath;
- 
-        if (string.IsNullOrEmpty(stable_path)) {
+
+        if (string.IsNullOrEmpty(stable_path))
+        {
             return null;
         }
 
-        if (stable_collection.Collections.Count == 0) {
+        if (stable_collection.Collections.Count == 0)
+        {
             return null;
         }
 
-        if (!stable_collection.Collections.TryGetValue(name, out StableCollection collection)) {
+        RealmDB.GetInstance();
+
+        if (!stable_collection.Collections.TryGetValue(name, out StableCollection collection))
+        {
             return null;
         }
 

@@ -22,6 +22,8 @@ public class Window
             .Center()
             .SetIconFile($"frontend/static/icon.{(is_linux ? "png" : "ico")}") // will this work on publish? only god knows
             .SetResizable(true)
+            .SetLogVerbosity(0)
+            .SetDevToolsEnabled(true)
             .Load("frontend/index.html");
 
         SetupHandlers();
@@ -32,7 +34,10 @@ public class Window
     {
         var messageHandler = new MessageHandler();
 
-        messageHandler.RegisterHandler<Test.Request>("test", Test.Handle);
+        messageHandler.RegisterHandler<TestHandler.Request>("test", TestHandler.Handle);
+        messageHandler.RegisterHandler<CollectionHandler.CLRequest>("get_collection", CollectionHandler.HandleGet);
+        messageHandler.RegisterHandler<CollectionHandler.InitRequest>("initialize_collections", CollectionHandler.HandleInitialize);
+        messageHandler.RegisterHandler<ConfigHandler.Request>("update_config", ConfigHandler.HandleConfigUpdate);
 
         window?.RegisterWebMessageReceivedHandler((sender, message) =>
         {

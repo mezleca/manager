@@ -14,7 +14,7 @@ public unsafe class Reader
         return File.ReadAllBytes(path);
     }
 
-    public static StableCollectionFile? ReadCollection(byte[] buffer)
+    public static StableCollectionFile ReadCollection(byte[] buffer)
     {
         var collections = new StableCollectionFile();
         var offset = 0;
@@ -23,7 +23,8 @@ public unsafe class Reader
         {
             collections.Version = Binary.Read<uint>(ptr, &offset);
             collections.Size = Binary.Read<uint>(ptr, &offset);
-            
+            collections.Collections = [];
+
             for (int i = 0; i < collections.Size; i++)
             {
                 var collection = new StableCollection
@@ -36,8 +37,10 @@ public unsafe class Reader
                 for (int j = 0; j < collection.Size; j++)
                 {
                     var hash = Binary.ReadString(ptr, &offset);
-                    _ = collection.Hashes.Append(hash);
+                    collection.Hashes.Add(hash);
                 }
+
+                collections.Collections.Add(collection.Name, collection);
             }
         }
 

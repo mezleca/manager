@@ -9,10 +9,7 @@ public unsafe static class Binary
         return result;
     }
 
-    public static bool ReadBool(byte* ptr, int* offset)
-    {
-        return Read<byte>(ptr, offset) != 0x00;
-    }
+    public static bool ReadBool(byte* ptr, int* offset) => Read<byte>(ptr, offset) != 0x00;
 
     public static int ReadULEB128(byte* ptr, int* offset)
     {
@@ -33,11 +30,9 @@ public unsafe static class Binary
 
     public static string ReadString(byte* ptr, int* offset)
     {
-
         bool present = ReadBool(ptr, offset);
 
-        if (!present)
-        {
+        if (!present) {
             return "";
         }
 

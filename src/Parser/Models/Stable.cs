@@ -95,5 +95,5 @@ public class StableCollectionFile
 {
     public uint Version { get; set; }
     public uint Size { get; set; }
-    public List<StableCollection> Collections { get; set; }
+    public Dictionary<string, StableCollection> Collections { get; set; }
 }

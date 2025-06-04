@@ -17,7 +17,7 @@ class MessageBus {
             id: this.message_id++,
             type: message_type,
             send: will_send || false,
-            data: msgpack.encode(data)
+            data: msgpack.encode(data || {})
         };
         
         const serialized = msgpack.encode(message_data);
@@ -53,6 +53,8 @@ class MessageBus {
 
             const message = msgpack.decode(message_data.data);
             const response_type = `${message_data.type}_${message_data.id}`;
+
+            console.log(response_type);
 
             if (this.pending.has(response_type)) {
                 

@@ -35,3 +35,11 @@ window.external.receiveMessage(Ipc.handleMessage);
 
 // disable page zoom
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
+
+(async () => {
+	await Ipc.sendAndWait("update_config", { stable_path: "O:\\" });
+	console.log("initialized config");
+	await Ipc.sendAndWait("initialize_collections", {});
+	const collection = await Ipc.sendAndWait("get_collection", { name: "mzle" });
+	console.log(collection);
+})();

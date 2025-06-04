@@ -6,14 +6,14 @@ namespace IPC;
 
 public class MessageHandler
 {
-    private readonly ConcurrentDictionary<string, Func<int, byte[], Task>> _handlers = new();
+    private readonly ConcurrentDictionary<string, Func<int, bool, byte[], Task>> _handlers = new();
 
-    public void RegisterHandler<T>(string message_type, Func<int, T, Task> handler)
+    public void RegisterHandler<T>(string message_type, Func<int, bool, T, Task> handler)
     {
-        _handlers[message_type] = async (id, data) =>
+        _handlers[message_type] = async (id, send, data) =>
         {
             var message = MessagePackSerializer.Deserialize<T>(data);
-            await handler(id, message);
+            await handler(id, send, message);
         };
     }
 
@@ -21,17 +21,11 @@ public class MessageHandler
     {
         try
         {
-            var data = Convert.FromBase64String(raw);
-            var msgdata = MessagePackSerializer.Deserialize<MessageData>(data);
+            var raw_data = Convert.FromBase64String(raw);
+            var msg_data = MessagePackSerializer.Deserialize<MessageData>(raw_data);
 
-            if (!msgdata.Send)
-            {
-                return;
-            }
-
-            if (_handlers.TryGetValue(msgdata.Type, out var handler))
-            {
-                await handler(msgdata.Id, msgdata.Data);
+            if (_handlers.TryGetValue(msg_data.Type, out var handler)) {
+                await handler(msg_data.Id, msg_data.Send, msg_data.Data);
             }
         }
         catch (Exception ex)

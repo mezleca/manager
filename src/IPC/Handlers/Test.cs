@@ -1,7 +1,7 @@
 using MessagePack;
 namespace IPC.Handlers;
 
-public class Test
+public class TestHandler
 {
     [MessagePackObject]
     public class Request
@@ -13,17 +13,14 @@ public class Test
     [MessagePackObject]
     public class Response
     {
-        [Key("success")]
-        public bool Success { get; set; }
         [Key("content")]
         public required string Content { get; set; }
     }
 
-    static public async Task Handle(int id, Request request)
+    static public async Task Handle(int id, bool send, Request request)
     {
         await MessageHandler.Send(id, "test", new Response
         {
-            Success = true,
             Content = "Hello World"
         });
     }

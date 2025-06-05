@@ -1,5 +1,6 @@
 using MessagePack;
 using Main;
+using Main.Manager;
 
 namespace IPC.Handlers;
 
@@ -9,14 +10,13 @@ public class UpdateConfigHandler : IMessageHandler<ConfigUpdateRequest>
 
     public async Task Handle(int id, bool send, ConfigUpdateRequest data)
     {
-        ConfigData updated_config = new()
-        {
+        Manager.config.UpdateFrom(new Config {
             StablePath = data.StablePath,
+            LazerPath = data.LazerPath,
             StableSongsPath = data.StableSongsPath,
-            AccessToken = data.AccessToken
-        };
-
-        Config.UpdateFrom(updated_config);
+            AccessToken = data.AccessToken,
+            Lazer = data.Lazer
+        });
 
         await Task.CompletedTask;
     }    
@@ -27,8 +27,12 @@ public class ConfigUpdateRequest
 {
     [Key("stable_path")]
     public string? StablePath { get; set; }
-    [Key("table_songs_path")]
+    [Key("lazer_path")]
+    public string? LazerPath { get; set; }
+    [Key("stable_songs_path")]
     public string? StableSongsPath { get; set; }
     [Key("access_token")]
-    public string? AccessToken { get; set; } 
+    public string? AccessToken { get; set; }
+    [Key("lazer")]
+    public bool? Lazer { get; set; }
 }

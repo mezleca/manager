@@ -37,9 +37,9 @@ window.external.receiveMessage(ipc.handle_message);
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
 
 (async () => {
-	console.log("initialized config");
-	await ipc.send("update_config", { stable_path: "O:\\" });
-	await ipc.send("load_collections", {});
-	const collection = await ipc.send("get_collection", { name: "mzle" });
-	console.log(collection);
+	// console.log("initialized config");
+	// await ipc.send("update_config", { stable_path: "O:\\" });
+	// await ipc.send("load_collections", {});
+	// const collection = await ipc.send("get_collection", { name: "mzle" });
+	// console.log(collection);
 })();

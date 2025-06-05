@@ -8,11 +8,8 @@ public class MessageBus
 {
     private readonly ConcurrentDictionary<string, IMessageHandler> _handlers = new();
     private static int _message_counter = 0;
-    
-    public void RegisterHandler<T>(IMessageHandler<T> handler) where T : class
-    {
-        _handlers[handler.MessageType] = handler;
-    }
+
+    public void RegisterHandler<T>(IMessageHandler<T> handler) where T : class => _handlers[handler.MessageType] = handler;
     
     public async Task HandleMessage(string raw_message)
     {
@@ -60,11 +57,13 @@ public class MessageBus
                 Data = serialized,
                 Send = expect_response
             };
-            
+
             var serialized_data = MessagePackSerializer.Serialize(message_data);
             var base64 = Convert.ToBase64String(serialized_data);
-            
+
             Window.window?.SendWebMessage(base64);
+
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -99,8 +98,7 @@ public abstract class BaseMessageHandler<TRequest, TResponse> : IMessageHandler<
         var request = MessagePackSerializer.Deserialize<TRequest>(data);
         var response = await ProcessRequest(request);
         
-        if (send && response != null)
-        {
+        if (send && response != null) {
             await MessageBus.SendResponse(id, MessageType, response);
         }
     }

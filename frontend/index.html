@@ -169,7 +169,7 @@
                             <div class="results-count">1384 matches</div>
                         </div>
                         
-                        <div class="beatmaps-grid">
+                        <div class="container-column-grid">
                             <div class="beatmap-card">
                                 <div class="beatmap-bg"></div>
                                 <div class="beatmap-controls">
@@ -269,7 +269,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="content tab-content" id="browse-content">
                 <div class="content-header">
                     <div class="search-container">
@@ -338,7 +337,7 @@
                         <div class="results-count">214 matches</div>
                     </div>
                     
-                    <div class="beatmaps-grid">
+                    <div class="container-column-grid">
                         <div class="beatmap-card">
                             <div class="beatmap-bg"></div>
                             <div class="beatmap-controls">
@@ -373,7 +372,101 @@
                     </div>
                 </div>
             </div>
-
+            <div class="content tab-content" id="config-content">
+                <div class="config-content">
+                    <button class="add-btn" id="add_mirror">
+                        <svg id="add-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" width="16" height="16" stroke="currentColor" fill="none">
+                            <line x1="5" y1="2" x2="5" y2="8" stroke-width="1"></line>
+                            <line x1="2" y1="5" x2="8" y2="5" stroke-width="1"></line>
+                        </svg>
+                    </button>
+                    <div class="config-fields">
+                        <div class="field-group">
+                            <label class="field-label">osu! id</label>
+                            <div class="field-description">
+                                create a new OAuth application <a href='https://osu.ppy.sh/home/account/edit#new-oauth-application'>here</a> and paste the ID below</a>
+                            </div>
+                            <input type="text" class="text-input" id="osu_id" placeholder="ex: 123">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">osu! secret</label>
+                            <div class="field-description">
+                                create a new OAuth application <a href='https://osu.ppy.sh/home/account/edit#new-oauth-application'>here</a> and paste the SECRET below</a>
+                            </div>
+                            <input type="text" class="text-input" id="osu_secret" placeholder="ex: 123">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">osu stable path</label>
+                            <div class="field-description">click to select your osu! stable path</div>
+                            <div class="file-input-wrapper">
+                                <input type="file" class="file-input" id="stable_path" webkitdirectory>
+                                <div class="file-input-display">
+                                    <!-- if its saved the text will change to the saved path -->
+                                    <div class="text">click to select</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">osu lazer path</label>
+                            <div class="field-description">click to select your osu! lazer path</div>
+                            <div class="file-input-wrapper">
+                                <input type="file" class="file-input" id="lazer_path" webkitdirectory>
+                                <div class="file-input-display">
+                                    <!-- if its saved the text will change to the saved path -->
+                                    <div class="text">click to select</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">songs folder</label>
+                            <div class="field-description">click to select your osu! songs folder</div>
+                            <div class="file-input-wrapper">
+                                <input type="file" class="file-input" id="stable_path" webkitdirectory>
+                                <div class="file-input-display">
+                                    <!-- if its saved the text will change to the saved path -->
+                                    <div class="text">click to select</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="lazer_mode">
+                                    <div class="checkbox-custom"></div>
+                                </div>
+                                <label for="auto-update" class="checkbox-text">lazer mode</label>
+                            </div>
+                            <div class="field-description">enable to use your lazer collectios / beatmaps</div>
+                        </div>
+                        <div class="field-group">
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="local_images" checked>
+                                    <div class="checkbox-custom"></div>
+                                </div>
+                                <label for="debug-mode" class="checkbox-text">use local beatmap images</label>
+                            </div>
+                            <div class="field-description">useful if you have no internet</div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-header">
+                            <div class="info-box-title">custom mirrors</div>
+                            <div class="info-box-subtitle">TODO</div>
+                        </div>               
+                        <div class="info-box-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">TODO</div>
+                                <div class="stat-label">TODO</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">TODO</div>
+                                <div class="stat-label">TODO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="content tab-content" id="discover-content">
                 <div class="content-header">
                     <div class="search-container">
@@ -440,7 +533,7 @@
                         <div class="results-count">42 new beatmaps found</div>
                     </div>
                     
-                    <div class="beatmaps-grid">
+                    <div class="container-column-grid">
                         <div class="beatmap-card new">
                             <div class="beatmap-bg"></div>
                             <div class="beatmap-controls">

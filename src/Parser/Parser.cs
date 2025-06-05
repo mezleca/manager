@@ -6,8 +6,7 @@ public unsafe class Reader
     {
         bool exists = File.Exists(path);
 
-        if (!exists)
-        {
+        if (!exists) {
             return null;
         }
 

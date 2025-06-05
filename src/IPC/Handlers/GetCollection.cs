@@ -6,21 +6,17 @@ namespace IPC.Handlers;
 public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, CollectionRespose>
 {
     public override string MessageType => "get_collection";
-    
-    public override async Task Handle(int id, bool send, CollectionRequest data)
-    {
-        await Task.CompletedTask;
-    }
+    public override async Task Handle(int id, bool send, CollectionRequest data) => await Task.CompletedTask;
 
-    protected override async Task<CollectionRespose> ProcessRequest(CollectionRequest request)
+    protected override Task<CollectionRespose?> ProcessRequest(CollectionRequest request)
     {
         var collection = Manager.GetCollection(request.Name);
 
         if (collection == null) {
-            return new CollectionRespose { Found = false };
+            return Task.FromResult<CollectionRespose?>(new CollectionRespose { Found = false });
         }
 
-        return new CollectionRespose { Found = true, Name = collection.Name, Hashes = collection.Hashes, Size = collection.Size };
+        return Task.FromResult<CollectionRespose?>(new CollectionRespose { Found = true, Name = collection.Name, Hashes = collection.Hashes, Size = collection.Size });
     }
 }
 

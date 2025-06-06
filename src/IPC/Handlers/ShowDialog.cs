@@ -11,8 +11,8 @@ public class ShowDialogHandler : BaseMessageHandler<DialogRequest, DialogRespons
     protected override async Task<DialogResponse?> ProcessRequest(DialogRequest request)
     {
         string[]? result = request.Type == "file" 
-            ? await Window.window?.ShowOpenFileAsync(defaultPath: request.Default, multiSelect: request.Multi)
-            : await Window.window?.ShowOpenFolderAsync(defaultPath: request.Default, multiSelect: false);
+            ? await (Window.window?.ShowOpenFileAsync(multiSelect: request.Multi) ?? Task.FromResult<string[]?>(null))
+            : await (Window.window?.ShowOpenFolderAsync(multiSelect: request.Multi) ?? Task.FromResult<string[]?>(null));
 
         // @TODO: if its file type also return file buffer
         // @TODO: multiple files support
@@ -28,9 +28,6 @@ public class DialogRequest
     
     [Key("multi")]
     public bool Multi { get; set; }
-    
-    [Key("default")]
-    public string? Default { get; set; }
 }
 
 [MessagePackObject]

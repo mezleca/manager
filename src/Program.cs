@@ -10,11 +10,16 @@ public class Entry
     static void Main(string[] args)
     {
         // classic nvidia + wayland moment
-        // also, is this only affecting this app? need to check
         if (Window.is_linux) {
-            _ = setenv("GDK_BACKEND", "x11", 1);
-            _ = setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", 1);
-            _ = setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", 1);
+            
+            var wayland_display = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
+            var is_wayland = !string.IsNullOrEmpty(wayland_display);
+            
+            // fix webview not loading due to some stupid nvidia bug on wayland
+            if (is_wayland) {
+                _ = setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", 1);
+                _ = setenv("WEBKIT_DMABUF_RENDERER_DISABLE_GBM", "1", 1);
+            }
         }
 
         Window.Initialize();

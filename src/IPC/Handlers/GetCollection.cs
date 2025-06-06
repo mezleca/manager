@@ -32,10 +32,14 @@ public class CollectionRespose
 {
     [Key("found")]
     public required bool Found { get; set; }
+
     [Key("name")]
     public string? Name { get; set; }
+
     [Key("size")]
     public uint? Size { get; set; }
+
     [Key("hashes")]
     public List<string>? Hashes { get; set; }
+    
 }

@@ -2,7 +2,7 @@ namespace Main.Parser;
 
 public unsafe static class Binary
 {
-    public static T Read<T>(byte* ptr, int* offset)
+    public static T Read<T>(byte* ptr, int* offset) where T : unmanaged
     {
         T result = *(T*)(ptr + *offset);
         *offset += sizeof(T);

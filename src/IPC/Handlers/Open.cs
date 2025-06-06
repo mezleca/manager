@@ -10,8 +10,8 @@ public class OpenHandler : IMessageHandler<OpenRequest>
     public async Task Handle(int id, bool send, OpenRequest data)
     {
         // scary
-        if (Utils.IsValidURL(data.Url)) {
-            Utils.Exec($"start {data.Url}");
+        if (!String.IsNullOrEmpty(data.Url) && Utils.IsValidURL(data.Url)) {
+            Utils.Exec($"{(Window.is_linux ? "xdg-open" : "start")} {data.Url}");
         }
    
         await Task.CompletedTask;

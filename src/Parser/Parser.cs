@@ -15,7 +15,10 @@ public unsafe class Reader
 
     public static StableCollectionFile ReadCollection(byte[] buffer)
     {
-        var collections = new StableCollectionFile();
+        var collections = new StableCollectionFile{
+            Collections = []
+        };
+        
         var offset = 0;
 
         fixed (byte* ptr = &buffer[0])

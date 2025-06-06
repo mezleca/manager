@@ -1,10 +1,8 @@
-using System;
-using System.IO;
 namespace Main.Manager;
 
 public class Manager
 {
-    public static StableCollectionFile? stable_collection;
+    public static StableCollectionFile? stable_collection = null;
     public static Config config = new();
 
     public static Task<bool> LoadCollection()
@@ -31,7 +29,7 @@ public class Manager
             return null;
         }
 
-        if (stable_collection?.Collections.Count == 0) {      
+        if (stable_collection?.Collections == null) {      
             return null;
         }
 

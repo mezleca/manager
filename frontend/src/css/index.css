@@ -27,6 +27,12 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     font-family: "Torus Bold";
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+svg {
+    z-index: 1;
 }
 
 body {

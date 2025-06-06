@@ -3,6 +3,7 @@ using System.Drawing;
 using IPC;
 using System.Runtime.InteropServices;
 using IPC.Handlers;
+using Main.Manager;
 
 namespace Main;
 
@@ -39,6 +40,7 @@ public class Window
         bus.RegisterHandler(new ReloadCollectionHandler());
         bus.RegisterHandler(new UpdateConfigHandler());
         bus.RegisterHandler(new ShowDialogHandler());
+        bus.RegisterHandler(new OpenHandler());
 
         window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }

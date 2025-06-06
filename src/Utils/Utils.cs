@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Main;
 
-public static class Utils
+public class Utils
 {
-    public static (string stdout, int exitCode) Exec(string command)
+    private static (string stdout, int exitCode) ExecLinux(string command)
     {
         var process_info = new ProcessStartInfo
         {
@@ -17,22 +18,40 @@ public static class Utils
             CreateNoWindow = true
         };
 
+        return ExecuteProcess(process_info);
+    }
+
+    private static (string stdout, int exitCode) ExecWindows(string command)
+    {
+        var process_info = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = $"/c {command}",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        return ExecuteProcess(process_info);
+    }
+
+    private static (string stdout, int exitCode) ExecuteProcess(ProcessStartInfo process_info)
+    {
         using var process = new Process { StartInfo = process_info };
         var stdout = new StringBuilder();
         var stderr = new StringBuilder();
 
         process.OutputDataReceived += (sender, e) =>
         {
-            if (e.Data != null)
-            {
+            if (e.Data != null) {    
                 stdout.AppendLine(e.Data);
             }
         };
 
         process.ErrorDataReceived += (sender, e) =>
         {
-            if (e.Data != null)
-            {
+            if (e.Data != null) {    
                 stderr.AppendLine(e.Data);
             }
         };
@@ -43,6 +62,11 @@ public static class Utils
         process.WaitForExit();
 
         return (stdout.ToString().Trim(), process.ExitCode);
+    }
+
+    public static (string stdout, int exitCode) Exec(string command)
+    {
+        return Window.is_linux ? ExecLinux(command) : ExecWindows(command);
     }
     
     public static string GetLinuxPath()
@@ -91,5 +115,13 @@ public static class Utils
         }
 
         return osu_path;
+    }
+
+    // https://stackoverflow.com/a/56116499
+    public static bool IsValidURL(string URL)
+    {
+        string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        return Rgx.IsMatch(URL);
     }
 }

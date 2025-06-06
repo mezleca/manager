@@ -28,6 +28,7 @@ also using c# (Photino) instead of go (wails)
 - [ ] browse beatmaps tab (from osu! local database)
 - [ ] download manager (c#)
 - [ ] build script
+- [ ] webpack 
 - [ ] github workflow (windows / linux)
 - [ ] move the v1 frontend logic (virtual list, etc...) 
 - [ ] move the rest of v1 backend logic to c# (filters, get_sr, get_bpm, etc...)

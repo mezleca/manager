@@ -18,7 +18,8 @@ public class Window
         window = new PhotinoWindow()
             .SetTitle("osu manager")
             .SetUseOsDefaultSize(false)
-            .SetSize(new Size(1024, 800))
+            .SetSize(1024, 800)
+            .SetMinSize(800, 700)
             .Center()
             .SetIconFile($"frontend/static/icon.{(is_linux ? "png" : "ico")}") // will this work on publish? only god knows
             .SetResizable(true)
@@ -37,6 +38,7 @@ public class Window
         bus.RegisterHandler(new GetCollectionHandler());
         bus.RegisterHandler(new ReloadCollectionHandler());
         bus.RegisterHandler(new UpdateConfigHandler());
+        bus.RegisterHandler(new ShowDialogHandler());
 
         window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }

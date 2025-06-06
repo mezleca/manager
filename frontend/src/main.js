@@ -1,3 +1,4 @@
+import { initialize_config, config } from "./config.js";
 import { ipc } from "./ipc/message.js";
 
 const tabs = document.querySelectorAll(".tab");
@@ -37,9 +38,10 @@ window.external.receiveMessage(ipc.handle_message);
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
 
 (async () => {
-	// console.log("initialized config");
-	// await ipc.send("update_config", { stable_path: "O:\\" });
-	// await ipc.send("load_collections", {});
-	// const collection = await ipc.send("get_collection", { name: "mzle" });
-	// console.log(collection);
+
+	// get saved values / add listeners
+	await initialize_config();
+	
+	// send saved values to the backend
+	await ipc.send("update_config", config);
 })();

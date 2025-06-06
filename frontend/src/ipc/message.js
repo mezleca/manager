@@ -15,19 +15,20 @@ class MessageBus {
         this.handlers.get(message_type).push(handler);
     }
    
-    send = async (message_type, data, timeout_ms = 5000) => {
+    send = async (message_type, data) => {
 
         const request_id = ++this.message_id;
         const response_key = `${message_type}_${request_id}`;
         
         return new Promise((resolve, reject) => {
-            const timer = setTimeout(() => {
-                this.pending.delete(response_key);
-                reject(new Error(`timeout waiting for ${message_type}`));
-            }, timeout_ms);
+            
+            // const timer = setTimeout(() => {
+            //     this.pending.delete(response_key);
+            //     reject(new Error(`timeout waiting for ${message_type}`));
+            // }, timeout_ms);
            
             this.pending.set(response_key, (response) => {
-                clearTimeout(timer);
+                // clearTimeout(timer);
                 this.pending.delete(response_key);
                 resolve(response);
             });

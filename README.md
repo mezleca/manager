@@ -15,15 +15,16 @@ also using c# (Photino) instead of go (wails)
 - [ ] osu! stable parser
     - [x] collections.db
     - [ ] osu!.db
-- [ ] config tab
-    - [x] html
-    - [ ] open links on your browser
-    - [ ] more js to check valid paths, rename file selectors, enable checkboxes, etc...
 - [ ] osdb parser
 - [x] osu! lazer realm connection
 - [ ] osu! lazer helpers (get beatmap, get collection, etc...)
 - [ ] add real time realm update (if possible)
 - [ ] discover tab (from osu! api)
+- [x] basic config stuff
+    - [x] html
+    - [x] dialog handlers
+    - [x] js
+- [ ] open links on browser
 - [ ] browse beatmaps tab (from osu! local database)
 - [ ] download manager (c#)
 - [ ] build script

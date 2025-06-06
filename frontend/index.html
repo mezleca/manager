@@ -381,70 +381,70 @@
                         </svg>
                     </button>
                     <div class="config-fields">
-                        <div class="field-group">
+                        <div class="field-group" id="osu_id">
                             <label class="field-label">osu! id</label>
                             <div class="field-description">
                                 create a new OAuth application <a href='https://osu.ppy.sh/home/account/edit#new-oauth-application'>here</a> and paste the ID below</a>
                             </div>
-                            <input type="text" class="text-input" id="osu_id" placeholder="ex: 123">
+                            <input type="password" class="text-input" placeholder="ex: 123" required>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="osu_secret">
                             <label class="field-label">osu! secret</label>
                             <div class="field-description">
                                 create a new OAuth application <a href='https://osu.ppy.sh/home/account/edit#new-oauth-application'>here</a> and paste the SECRET below</a>
                             </div>
-                            <input type="text" class="text-input" id="osu_secret" placeholder="ex: 123">
+                            <input type="password" class="text-input" placeholder="ex: 123" required>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="stable_path">
                             <label class="field-label">osu stable path</label>
                             <div class="field-description">click to select your osu! stable path</div>
                             <div class="file-input-wrapper">
-                                <input type="file" class="file-input" id="stable_path" webkitdirectory>
+                                <input type="custom-file" class="file-input">
                                 <div class="file-input-display">
                                     <!-- if its saved the text will change to the saved path -->
                                     <div class="text">click to select</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="lazer_path">
                             <label class="field-label">osu lazer path</label>
                             <div class="field-description">click to select your osu! lazer path</div>
                             <div class="file-input-wrapper">
-                                <input type="file" class="file-input" id="lazer_path" webkitdirectory>
+                                <input type="custom-file" class="file-input">
                                 <div class="file-input-display">
                                     <!-- if its saved the text will change to the saved path -->
                                     <div class="text">click to select</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="stable_songs_path">
                             <label class="field-label">songs folder</label>
                             <div class="field-description">click to select your osu! songs folder</div>
                             <div class="file-input-wrapper">
-                                <input type="file" class="file-input" id="stable_path" webkitdirectory>
+                                <input type="custom-file" class="file-input">
                                 <div class="file-input-display">
                                     <!-- if its saved the text will change to the saved path -->
                                     <div class="text">click to select</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="lazer_mode">
                             <div class="checkbox-wrapper">
                                 <div class="checkbox">
                                     <input type="checkbox" id="lazer_mode">
                                     <div class="checkbox-custom"></div>
                                 </div>
-                                <label for="auto-update" class="checkbox-text">lazer mode</label>
+                                <label class="checkbox-text">lazer mode</label>
                             </div>
                             <div class="field-description">enable to use your lazer collectios / beatmaps</div>
                         </div>
-                        <div class="field-group">
+                        <div class="field-group" id="local">
                             <div class="checkbox-wrapper">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="local_images" checked>
+                                    <input type="checkbox" checked>
                                     <div class="checkbox-custom"></div>
                                 </div>
-                                <label for="debug-mode" class="checkbox-text">use local beatmap images</label>
+                                <label class="checkbox-text">use local beatmap images</label>
                             </div>
                             <div class="field-description">useful if you have no internet</div>
                         </div>

@@ -9,14 +9,13 @@ public class Entry
     [STAThread]
     static void Main(string[] args)
     {
-        // classic nvidia + wayland moment
+        // classic nvidia moment
         if (Window.is_linux) {
             
-            var wayland_display = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY");
-            var is_wayland = !string.IsNullOrEmpty(wayland_display);
-            
-            // fix webview not loading due to some stupid nvidia bug on wayland
-            if (is_wayland) {
+            var LIBVA_DRIVER_NAME = Environment.GetEnvironmentVariable("LIBVA_DRIVER_NAME");
+      
+            // fix webview not loading due to some stupid ass nvidia bug
+            if (LIBVA_DRIVER_NAME == "nvidia") {
                 _ = setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", 1);
                 _ = setenv("WEBKIT_DMABUF_RENDERER_DISABLE_GBM", "1", 1);
             }

@@ -22,7 +22,7 @@ also using c# (Photino) instead of go (wails)
 ## need this to add the rest of the features
 - [x] ipc: handlers on both c# & js to send typed information using messagepack (well, js dont need types but you get it) 
 - [x] ipc: make it stable
-- [x] window: fix window not opening on wayland (added a hotfix but theres prob a better way to do this)
+- [x] window: fix window not opening with nvidia drivers
 - [x] parser: collections.db
 - [ ] parser: osu!.db
 - [ ] stable: helpers (get beatmap, get collection, etc...)

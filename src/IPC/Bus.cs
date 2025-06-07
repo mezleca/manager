@@ -102,17 +102,17 @@ public interface IMessageHandler<T> : IMessageHandler where T : class
 public abstract class BaseMessageHandler<TRequest, TResponse> : IMessageHandler<TRequest> where TRequest : class where TResponse : class
 {
     public abstract string MessageType { get; }
-    
+
     public async Task Handle(int id, bool send, byte[] data)
     {
         var request = MessagePackSerializer.Deserialize<TRequest>(data);
         var response = await ProcessRequest(request);
-        
+
         if (send && response != null) {
             await MessageBus.SendResponse(id, MessageType, response);
         }
     }
-    
+
     public abstract Task Handle(int id, bool send, TRequest data);
     protected abstract Task<TResponse?> ProcessRequest(TRequest request);
 }

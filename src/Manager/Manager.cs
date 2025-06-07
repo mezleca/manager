@@ -134,6 +134,25 @@ public class Manager
         return beatmap;
     }
 
+    public static IEnumerable<StableCollection>? GetAllStableCollections()
+    {
+        if (StableCollection?.Collections == null) {
+            return null;
+        }
+
+        return StableCollection.Collections.Values;
+    }
+
+    public static IEnumerable<LazerCollection>? GetAllLazerCollections()
+    {
+        var instance = RealmDB.GetInstance(config.LazerPath);
+        if (instance == null) {
+            return null;
+        }
+
+        return instance.All<LazerCollection>()?.ToList();
+    }
+
     public static async Task<bool> LoadCollection() {
         return config.Lazer == true ? await LoadLazerCollection() : await LoadStableCollection();
     }

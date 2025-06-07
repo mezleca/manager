@@ -3,33 +3,53 @@ using MessagePack;
 
 namespace IPC.Handlers;
 
-public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, CollectionRespose>
+public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, CollectionResponse>
 {
     public override string MessageType => "get_collection";
     public override async Task Handle(int id, bool send, CollectionRequest data) => await Task.CompletedTask;
 
-    protected override Task<CollectionRespose?> ProcessRequest(CollectionRequest request)
+    protected override Task<CollectionResponse?> ProcessRequest(CollectionRequest request)
     {
-        var result = new CollectionRespose { Found = false, Name = request.Name };
+        var result = new CollectionResponse { Found = false, Name = request.Name };
 
         if (Manager.config.Lazer == true)
         {
             var collection = Manager.GetLazerCollection(request.Name);
-            if (collection != null) {      
-                result.Found = true;
-                result.Hashes = collection.BeatmapMD5Hashes?.ToList();
+            if (collection != null) {
+                result = ProcessLazerCollection(collection, request.Name);
             }
         }
         else
         {
             var collection = Manager.GetStableCollection(request.Name);
-            if (collection != null) {       
-                result.Found = true;
-                result.Hashes = collection.Hashes;
+            if (collection != null){
+                result = ProcessStableCollection(collection, request.Name);
             }
         }
 
-        return Task.FromResult<CollectionRespose?>(result);
+        return Task.FromResult<CollectionResponse?>(result);
+    }
+
+    public static CollectionResponse ProcessLazerCollection(LazerCollection collection, string name)
+    {
+        return new CollectionResponse
+        {
+            Found = true,
+            Name = name,
+            Size = (uint?)collection.BeatmapMD5Hashes?.Count,
+            Hashes = collection.BeatmapMD5Hashes?.ToList()
+        };
+    }
+
+    public static CollectionResponse ProcessStableCollection(StableCollection collection, string name)
+    {
+        return new CollectionResponse
+        {
+            Found = true,
+            Name = name,
+            Size = (uint?)collection.Hashes?.Count,
+            Hashes = collection.Hashes
+        };
     }
 }
 
@@ -41,7 +61,7 @@ public class CollectionRequest
 }
 
 [MessagePackObject]
-public class CollectionRespose
+public class CollectionResponse
 {
     [Key("found")]
     public required bool Found { get; set; }
@@ -54,5 +74,4 @@ public class CollectionRespose
 
     [Key("hashes")]
     public List<string>? Hashes { get; set; }
-    
 }

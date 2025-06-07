@@ -41,6 +41,7 @@ public class Window
         bus.RegisterHandler(new UpdateConfigHandler());
         bus.RegisterHandler(new ShowDialogHandler());
         bus.RegisterHandler(new OpenHandler());
+        bus.RegisterHandler(new GetBeatmapHandler());
 
         bus.ShowHandlers();
 

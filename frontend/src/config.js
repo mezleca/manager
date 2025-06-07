@@ -1,6 +1,7 @@
 import { indexed } from "./database/indexed.js";
 import { ipc } from "./ipc/message.js";
 import { debounce } from "./components/utils/utils.js";
+import { create_alert } from "./components/utils/popup.js";
 
 const groups = [...document.querySelectorAll(".field-group")];
 
@@ -18,7 +19,6 @@ export const config = {
 export const save_field = async (name, value) => {
     indexed.save("config", name, value);
     config[name] = value;
-    // @TODO: since the c# side can handle single fields, send only the updated value
     await ipc.send("update_config", config);
 };
 
@@ -72,14 +72,28 @@ export const initialize_config = async () => {
     }
 };
 
-export const load_osu_data = async () => {
+export const load_db = async () => {
 
-    if (config.lazer) {
-        console.log("TODO");
+    const db_result = await ipc.send("load_database");
+
+    // @TODO: show error message here
+    if (!db_result?.success) {
+        create_alert("failed to load database", { type: "error", seconds: 10 });
         return;
     }
+};
 
-    console.log("sending load");
-    const result = await ipc.send("load_osu_data");
-    console.log(result);
+export const load_cl = async () => {
+
+    const db_result = await ipc.send("load_collections");
+
+    if (!db_result?.success) {
+        create_alert("failed to load collection", { type: "error", seconds: 10 });
+        return;
+    }
+};
+
+export const load_files = async () => {
+    await load_db();
+    await load_cl();
 };

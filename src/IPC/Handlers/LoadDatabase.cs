@@ -5,7 +5,7 @@ namespace Main.Manager;
 
 public class LoadOsuDataHandler : BaseMessageHandler<OsuDataRequest, OsuDataResponse>
 {
-    public override string MessageType => "load_osu_data";
+    public override string MessageType => "load_database";
     public override async Task Handle(int id, bool send, OsuDataRequest data) => await Task.CompletedTask;
 
     protected override async Task<OsuDataResponse?> ProcessRequest(OsuDataRequest request)
@@ -13,7 +13,7 @@ public class LoadOsuDataHandler : BaseMessageHandler<OsuDataRequest, OsuDataResp
         var response = new OsuDataResponse{ Success = false };
 
         try {
-            response.Success = await Manager.LoadStableDB();
+            response.Success = await Manager.LoadDatabase();
         } catch(Exception ex) {
             Console.WriteLine(ex);
         }

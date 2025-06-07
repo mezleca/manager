@@ -10,13 +10,26 @@ public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, Collec
 
     protected override Task<CollectionRespose?> ProcessRequest(CollectionRequest request)
     {
-        var collection = Manager.GetCollection(request.Name);
+        var result = new CollectionRespose { Found = false, Name = request.Name };
 
-        if (collection == null) {
-            return Task.FromResult<CollectionRespose?>(new CollectionRespose { Found = false });
+        if (Manager.config.Lazer == true)
+        {
+            var collection = Manager.GetLazerCollection(request.Name);
+            if (collection != null) {      
+                result.Found = true;
+                result.Hashes = collection.BeatmapMD5Hashes?.ToList();
+            }
+        }
+        else
+        {
+            var collection = Manager.GetStableCollection(request.Name);
+            if (collection != null) {       
+                result.Found = true;
+                result.Hashes = collection.Hashes;
+            }
         }
 
-        return Task.FromResult<CollectionRespose?>(new CollectionRespose { Found = true, Name = collection.Name, Hashes = collection.Hashes, Size = collection.Size });
+        return Task.FromResult<CollectionRespose?>(result);
     }
 }
 

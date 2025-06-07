@@ -1,7 +1,9 @@
-using MongoDB.Bson;
 using Realms;
 
-public class BeatmapDifficulty : EmbeddedObject
+namespace Main.Manager;
+
+[MapTo("BeatmapDifficulty")]
+public class LazerBeatmapDifficulty : EmbeddedObject
 {
     public float DrainRate { get; set; }
     public float CircleSize { get; set; }
@@ -11,7 +13,8 @@ public class BeatmapDifficulty : EmbeddedObject
     public double SliderTickRate { get; set; }
 }
 
-public class BeatmapMetadata : RealmObject
+[MapTo("BeatmapMetadata")]
+public class LazerBeatmapMetadata : RealmObject
 {
     public string? Title { get; set; }
     public string? TitleUnicode { get; set; }
@@ -25,7 +28,8 @@ public class BeatmapMetadata : RealmObject
     public string? BackgroundFile { get; set; }
 }
 
-public class BeatmapUserSettings : EmbeddedObject
+[MapTo("BeatmapMetadata")]
+public class LazerBeatmapUserSettings : EmbeddedObject
 {
     public double Offset { get; set; }
 }
@@ -64,7 +68,8 @@ public class RealmNamedFileUsage : EmbeddedObject
     public string? Filename { get; set; }
 }
 
-public class BeatmapCollection : RealmObject
+[MapTo("BeatmapCollection")]
+public class LazerCollection : RealmObject
 {
     [PrimaryKey]
     public Guid ID { get; set; }
@@ -74,7 +79,8 @@ public class BeatmapCollection : RealmObject
     public DateTimeOffset LastModified { get; set; }
 }
 
-public class BeatmapSet : RealmObject
+[MapTo("BeatmapSet")]
+public class LazerBeatmapSet : RealmObject
 {
     [PrimaryKey]
     public Guid ID { get; set; }
@@ -85,7 +91,7 @@ public class BeatmapSet : RealmObject
     public DateTimeOffset DateAdded { get; set; }
     public DateTimeOffset? DateSubmitted { get; set; }
     public DateTimeOffset? DateRanked { get; set; }
-    public IList<Beatmap> Beatmaps { get; } = null!;
+    public IList<LazerBeatmap> Beatmaps { get; } = null!;
     public IList<RealmNamedFileUsage> Files { get; } = null!;
     public int Status { get; set; } = 0;
     public bool DeletePending { get; set; } = false;
@@ -93,17 +99,18 @@ public class BeatmapSet : RealmObject
     public bool Protected { get; set; } = false;
 }
 
-public class Beatmap : RealmObject
+[MapTo("Beatmap")]
+public class LazerBeatmap : RealmObject
 {
     [PrimaryKey]
     public Guid ID { get; set; } 
     
     public string? DifficultyName { get; set; }
     public Ruleset Ruleset { get; set; } = null!;
-    public BeatmapDifficulty Difficulty { get; set; } = null!;
-    public BeatmapMetadata Metadata { get; set; } = null!;
-    public BeatmapUserSettings UserSettings { get; set; } = null!;
-    public BeatmapSet BeatmapSet { get; set; } = null!;
+    public LazerBeatmapDifficulty Difficulty { get; set; } = null!;
+    public LazerBeatmapMetadata Metadata { get; set; } = null!;
+    public LazerBeatmapUserSettings UserSettings { get; set; } = null!;
+    public LazerBeatmapSet BeatmapSet { get; set; } = null!;
     
     [Indexed]
     public int OnlineID { get; set; } = -1;

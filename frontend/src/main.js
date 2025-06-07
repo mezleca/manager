@@ -1,5 +1,4 @@
-import { create_alert } from "./components/utils/popup.js";
-import { initialize_config, config, load_osu_data } from "./config.js";
+import { initialize_config, config, load_files } from "./config.js";
 import { ipc } from "./ipc/message.js";
 
 const tabs = document.querySelectorAll(".tab");
@@ -56,14 +55,13 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 
 	// get saved values / add listeners
 	await initialize_config();
-	
-	// send config data to the backend
 	await ipc.send("update_config", config);
+	await load_files();
+
+	const collection = await ipc.send("get_collection", { name: "mzle" });
+	const beatmap = await ipc.send("get_beatmap", { md5: collection.hashes[0] });
+
+	console.log(collection, beatmap);
 
 	open_links_on_browser();
-
-	// get osu / collections data
-	await load_osu_data();
-
-	create_alert("test".repeat(128), { type: "alert", seconds: 999 });
 })();

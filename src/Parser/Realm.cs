@@ -6,7 +6,11 @@ public class RealmDB
     private static readonly ulong LAZER_SCHEMA_VERSION = 48;
     private static Realm? _instance = null;
 
-    public static Realm GetInstance(string path)
+    public static Realm? GetInstance() {
+        return _instance;
+    }
+
+    public static Realm? GetInstance(string path)
     {
         if (_instance != null) {
             return _instance;

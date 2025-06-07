@@ -24,12 +24,12 @@ also using c# (Photino) instead of go (wails)
 - [x] ipc: make it stable
 - [x] window: fix window not opening with nvidia drivers
 - [x] parser: collections.db
-- [ ] parser: osu!.db
+- [x] parser: osu!.db
 - [ ] stable: helpers (get beatmap, get collection, etc...)
 - [x] lazer: class to get realm instance
 - [ ] lazer: helpers (get beatmap, get collection, etc...)
-- [x] basic config stuff (priority)
 - [x] config: html / css
+- [x] config: load / save
 - [x] ipc: handlers to open dialogs
 - [ ] app: browse beatmaps tab (from osu! local database)
 - [ ] app: download manager

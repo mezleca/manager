@@ -1,4 +1,5 @@
-import { initialize_config, config } from "./config.js";
+import { create_alert } from "./components/utils/popup.js";
+import { initialize_config, config, load_osu_data } from "./config.js";
 import { ipc } from "./ipc/message.js";
 
 const tabs = document.querySelectorAll(".tab");
@@ -6,8 +7,7 @@ const tab_contents = document.querySelectorAll(".tab-content");
 const expand_buttons = document.querySelectorAll(".expand-btn");
 const search_expandeds = document.querySelectorAll(".search-expanded");
 
-// open all links on browser
-const setup_link_on_browser = () => {
+const open_links_on_browser = () => {
 	const elements = [...document.querySelectorAll("a")];
 	
 	for (let i = 0; i < elements.length; i++) {
@@ -57,8 +57,13 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 	// get saved values / add listeners
 	await initialize_config();
 	
-	// send saved values to the backend
+	// send config data to the backend
 	await ipc.send("update_config", config);
 
-	setup_link_on_browser();
+	open_links_on_browser();
+
+	// get osu / collections data
+	await load_osu_data();
+
+	create_alert("test".repeat(128), { type: "alert", seconds: 999 });
 })();

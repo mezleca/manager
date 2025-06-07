@@ -18,8 +18,10 @@ public class MessageBus
             var raw_data = Convert.FromBase64String(raw_message);
             var msg_data = MessagePackSerializer.Deserialize<MessageData>(raw_data);
 
+
             if (_handlers.TryGetValue(msg_data.Type, out var handler))
             {
+                Console.WriteLine(msg_data.Type);
                 await handler.Handle(msg_data.Id, msg_data.Send, msg_data.Data);
                 await SendConfirmation(msg_data.Id, msg_data.Type);
             }
@@ -68,6 +70,14 @@ public class MessageBus
         catch (Exception ex)
         {
             Console.WriteLine($"send error: {ex.Message}");
+        }
+    }
+
+    public void ShowHandlers()
+    {
+        foreach (var handler in _handlers)
+        {
+            Console.WriteLine($"registered handler: {handler.Key}");
         }
     }
 }

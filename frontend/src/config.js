@@ -45,7 +45,6 @@ export const initialize_config = async () => {
             } else if (field_type == "checkbox") {
                 field.checked = value;
             } else {
-                console.log("updating field", value);
                 field.value = value;
             }
         };
@@ -71,6 +70,16 @@ export const initialize_config = async () => {
         // update the field text to use the current value
         if (config[id]) update_field(config[id]);
     }
-    
-    return config;
+};
+
+export const load_osu_data = async () => {
+
+    if (config.lazer) {
+        console.log("TODO");
+        return;
+    }
+
+    console.log("sending load");
+    const result = await ipc.send("load_osu_data");
+    console.log(result);
 };

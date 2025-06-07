@@ -14,15 +14,15 @@ public unsafe static class Binary
     public static int ReadULEB128(byte* ptr, int* offset)
     {
         int shift = 0;
-        int result;
+        int result = 0;
 
         while (true)
         {
             byte b = Read<byte>(ptr, offset);
-            result = (b & 0x7F) << shift;
+            result |= (b & 0x7F) << shift;
             shift += 7;
-            
-            if ((b & 0x80) == 0) { 
+
+            if ((b & 0x80) == 0) {  
                 break;
             }
         }

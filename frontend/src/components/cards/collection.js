@@ -1,4 +1,4 @@
-import { create_element } from "../utils/utils";
+import { create_element } from "../utils/utils.js";
 
 export const COLLECTION_CARD_TEMPLATE =
 `<div class="collection-item">
@@ -16,6 +16,7 @@ export const COLLECTION_CARD_TEMPLATE =
 export const create_collection_card = (id, name, count) => {
 
     const container = create_element(COLLECTION_CARD_TEMPLATE);
+    container.id = id;
 
     const data = {
         name: container.querySelector(".collection_name"),
@@ -25,5 +26,9 @@ export const create_collection_card = (id, name, count) => {
     data.name.textContent = name;
     data.count.textContent = count;
 
-    return container;
+    return {
+        container: container,
+        name: data.name,
+        count: container.count
+    };
 };

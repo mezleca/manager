@@ -25,7 +25,6 @@ public class Window
             .SetIconFile($"frontend/static/icon.{(is_linux ? "png" : "ico")}") // will this work on publish? only god knows
             .SetResizable(true)
             .SetLogVerbosity(0)
-            .SetDevToolsEnabled(true)
             .Load("frontend/index.html");
 
         SetupHandlers();
@@ -37,10 +36,13 @@ public class Window
         var bus = new MessageBus();
 
         bus.RegisterHandler(new GetCollectionHandler());
+        bus.RegisterHandler(new LoadOsuDataHandler());
         bus.RegisterHandler(new ReloadCollectionHandler());
         bus.RegisterHandler(new UpdateConfigHandler());
         bus.RegisterHandler(new ShowDialogHandler());
         bus.RegisterHandler(new OpenHandler());
+
+        bus.ShowHandlers();
 
         window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }

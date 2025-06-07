@@ -1,4 +1,4 @@
-import { create_element, REMOVE_SVG, PLUS_SVG, DOWNLOAD_SVG } from "../utils/utils";
+import { create_element, REMOVE_SVG, PLUS_SVG, DOWNLOAD_SVG } from "../utils/utils.js";
 
 const BEATMAP_CARD_TEMPLATE = `
 <div class="beatmap-card">

@@ -38,7 +38,6 @@ public class GetBeatmapHandler : BaseMessageHandler<BeatmapRequest, BeatmapRespo
         } 
         else 
         {
-
             var beatmap = Manager.GetStableBeatmap(request.Md5);
 
             if (beatmap != null) {

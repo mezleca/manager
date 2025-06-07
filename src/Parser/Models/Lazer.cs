@@ -28,7 +28,7 @@ public class LazerBeatmapMetadata : RealmObject
     public string? BackgroundFile { get; set; }
 }
 
-[MapTo("BeatmapMetadata")]
+[MapTo("BeatmapUserSettings")]
 public class LazerBeatmapUserSettings : EmbeddedObject
 {
     public double Offset { get; set; }

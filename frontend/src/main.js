@@ -59,9 +59,11 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 	await load_files();
 
 	const collection = await ipc.send("get_collection", { name: "mzle" });
-	const beatmap = await ipc.send("get_beatmap", { md5: collection.hashes[0] });
 
-	console.log(collection, beatmap);
+	if (collection.found) {
+		const beatmap = await ipc.send("get_beatmap", { md5: collection.hashes[0] });
+		console.log(beatmap);
+	}
 
 	open_links_on_browser();
 })();

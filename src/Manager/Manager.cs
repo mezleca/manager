@@ -97,7 +97,7 @@ public class Manager
 
     public static LazerCollection? GetLazerCollection(string name)
     {
-        var instance = RealmDB.GetInstance();
+        var instance = RealmDB.GetInstance(config.LazerPath);
 
         if (instance == null) {
             return null;
@@ -112,7 +112,7 @@ public class Manager
             return null;
         }
 
-        Realm? instance = RealmDB.GetInstance();
+        Realm? instance = RealmDB.GetInstance(config.LazerPath);
 
         if (instance == null) {
             return null;

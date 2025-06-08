@@ -15,7 +15,7 @@ public class Manager
     }
     
     public static bool IsLazerPathValid() {
-        return !string.IsNullOrEmpty(config.LazerPath) && Directory.Exists(config.LazerPath);
+        return !string.IsNullOrEmpty(config.LazerPath) && File.Exists($"{config.LazerPath}/client.realm");
     }
 
     public static byte[]? GetFileBuffer(string filePath)

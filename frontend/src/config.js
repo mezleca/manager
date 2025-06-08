@@ -73,27 +73,20 @@ export const initialize_config = async () => {
 };
 
 export const load_db = async () => {
-
     const db_result = await ipc.send("load_database");
-
-    // @TODO: show error message here
-    if (!db_result?.success) {
-        create_alert("failed to load database", { type: "error", seconds: 10 });
-        return;
+    if (!db_result.success) {
+        create_alert("failed to load database", { type: "error" });
     }
 };
 
 export const load_cl = async () => {
-
     const db_result = await ipc.send("load_collections");
-
-    if (!db_result?.success) {
-        create_alert("failed to load collection", { type: "error", seconds: 10 });
-        return;
+    console.log(db_result);
+    if (!db_result.success) {
+        create_alert("failed to load collection", { type: "error" });
     }
 };
 
 export const load_files = async () => {
-    await load_db();
-    await load_cl();
+    await Promise.all([load_db(), load_cl()]);
 };

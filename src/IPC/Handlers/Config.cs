@@ -55,5 +55,4 @@ public class ConfigUpdateRequest
 
     [Key("local")]
     public bool? Local { get; set; }
-    
 }

@@ -25,14 +25,14 @@ also using c# (Photino) instead of go (wails)
 - [x] window: fix window not opening with nvidia drivers
 - [x] parser: collections.db
 - [x] parser: osu!.db
-- [ ] stable: helpers (get beatmap, get collection, etc...)
+- [x] stable: helpers (get beatmap, get collection, etc...)
 - [x] lazer: class to get realm instance
-- [ ] lazer: helpers (get beatmap, get collection, etc...)
+- [x] lazer: helpers (get beatmap, get collection, etc...)
 - [x] config: html / css
 - [x] config: load / save
 - [x] ipc: handlers to open dialogs
 - [ ] app: browse beatmaps tab (from osu! local database)
 - [ ] app: download manager
 - [ ] app: build script
-- [ ] app: move the v1 frontend logic (virtual list, etc...) 
-- [ ] app: move the rest of v1 backend logic to c# (filters, get_sr, get_bpm, etc...)
+- [ ] app: move v1 frontend logic to js (virtual list, popup, progress, etc...) 
+- [ ] app: move v1 backend logic to c# (filters, get_sr, get_bpm, etc...)

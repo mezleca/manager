@@ -43,6 +43,8 @@ public class Window
         bus.RegisterHandler(new OpenHandler());
         bus.RegisterHandler(new GetBeatmapHandler());
         bus.RegisterHandler(new GetCollectionsHandler());
+        bus.RegisterHandler(new GetBeatmapsHandler());
+        bus.RegisterHandler(new SetCollectionHandler());
 
         bus.ShowHandlers();
 

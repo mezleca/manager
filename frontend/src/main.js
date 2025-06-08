@@ -51,6 +51,29 @@ window.external.receiveMessage(ipc.handle_message);
 // disable page zoom
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
 
+const test_get_beatmaps = async () => {
+
+	const collection = await ipc.send("get_collection", { name: "mzle" });
+
+	const beatmaps = [], promises = [];
+	const start = performance.now();
+
+	for (let i = 0; i < 16; i++) {
+
+		if (i >= collection.hashes.length) {
+			break;
+		}
+
+		promises.push(ipc.send("get_beatmap", { md5: collection.hashes[i] }));
+	}
+
+	const result = await Promise.all(promises);
+	beatmaps.push(...result);
+
+	const end = performance.now();
+	console.log(`took ${(end - start).toFixed(2)} ms`);
+};
+
 (async () => {
 
 	// get saved values / add listeners
@@ -58,17 +81,27 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 	await ipc.send("update_config", config);
 	await load_files();
 
-	const collection = await ipc.send("get_collection", { name: "mzle" });
 	const collections = await ipc.send("get_collections");
 
 	if (collections.success) {
-		console.log(collections);
+
+		const name = collections.collections[0].name;
+		console.log(name);
+		const set_collection = await ipc.send("set_collection", { name: name });
+	
+		if (!set_collection.success) {
+			console.log("failed to set collection");
+			return;
+		}
+
+		const non_filtered_beatmaps = await ipc.send("get_beatmaps", { index: 0, filtered: false });
+		console.log("non filtered", non_filtered_beatmaps);
+		const filtered_beatmaps = await ipc.send("get_beatmaps", { index: 0, filtered: true, name: name });
+		console.log("filtered", filtered_beatmaps);
+		const non_filtered_beatmaps2 = await ipc.send("get_beatmaps", { index: 50, amount: 999 }); // clamp to max amount available
+		console.log(non_filtered_beatmaps2);
 	}
 
-	if (collection.found) {
-		const beatmap = await ipc.send("get_beatmap", { md5: collection.hashes[0] });
-		console.log(beatmap);
-	}
-
+	document.querySelector(".add-btn").addEventListener("click", test_get_beatmaps);
 	open_links_on_browser();
 })();

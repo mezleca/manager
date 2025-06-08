@@ -8,6 +8,8 @@ public class Manager
     public static StableDatabase? StableDatabase = new();
     public static Config config = new();
 
+    public static Dictionary<string, List<string>> FilteredBeatmaps = new();
+
     public static bool IsStablePathValid() {
         return !string.IsNullOrEmpty(config.StablePath) && Directory.Exists(config.StablePath);
     }
@@ -153,6 +155,53 @@ public class Manager
         return instance.All<LazerCollection>()?.ToList();
     }
 
+    public static bool SetFilteredBeatmaps(string name, List<string> hashes) {
+        FilteredBeatmaps = [];
+        FilteredBeatmaps[name] = hashes;
+        return true;
+    }
+
+    public static List<string>? GetFilteredBeatmaps(string name) {
+        return FilteredBeatmaps.TryGetValue(name, out var hashes) ? hashes : null;
+    }
+
+    private static StableBeatmap? ConvertLazerToStable(LazerBeatmap lazerBeatmap)
+    {
+        if (lazerBeatmap == null) {
+            return null;
+        }
+
+        return new StableBeatmap
+        {
+            Artist = lazerBeatmap.Metadata?.Artist,
+            ArtistUnicode = lazerBeatmap.Metadata?.ArtistUnicode,
+            Title = lazerBeatmap.Metadata?.Title,
+            TitleUnicode = lazerBeatmap.Metadata?.TitleUnicode,
+            Mapper = lazerBeatmap.Metadata?.Author?.Username,
+            Difficulty = lazerBeatmap.DifficultyName,
+            AudioFileName = lazerBeatmap.Metadata?.AudioFile,
+            Md5 = lazerBeatmap.MD5Hash,
+            Ar = lazerBeatmap.Difficulty?.ApproachRate ?? 0f,
+            Cs = lazerBeatmap.Difficulty?.CircleSize ?? 0f,
+            Hp = lazerBeatmap.Difficulty?.DrainRate ?? 0f,
+            Od = lazerBeatmap.Difficulty?.OverallDifficulty ?? 0f,
+            SliderVelocity = lazerBeatmap.Difficulty?.SliderMultiplier ?? 0.0,
+            Length = (uint)lazerBeatmap.Length,
+            AudioPreview = (uint)(lazerBeatmap.Metadata?.PreviewTime ?? 0),
+            DifficultyId = (uint)lazerBeatmap.OnlineID,
+            BeatmapsetId = (uint)lazerBeatmap.BeatmapSet?.OnlineID,
+            Mode = (byte)lazerBeatmap.Ruleset?.OnlineID,
+            Source = lazerBeatmap.Metadata?.Source,
+            Tags = lazerBeatmap.Metadata?.Tags,
+            LastPlayed = (ulong)(lazerBeatmap.LastPlayed?.ToUnixTimeSeconds() ?? 0),
+            Status = (byte)lazerBeatmap.Status
+        };
+    }
+
+    public static void FilterBeatmaps() {
+        throw new NotImplementedException();
+    }
+
     public static async Task<bool> LoadCollection() {
         return config.Lazer == true ? await LoadLazerCollection() : await LoadStableCollection();
     }
@@ -162,6 +211,6 @@ public class Manager
     }
 
     public static bool UpdateCollection() {
-        return true;
+        throw new NotImplementedException();
     }
 }

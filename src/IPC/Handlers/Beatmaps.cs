@@ -321,4 +321,7 @@ public class BeatmapResponse
 
     [Key("od")]
     public float? Od { get; set; }
+
+    [Key("local")]
+    public bool Local = true; 
 }

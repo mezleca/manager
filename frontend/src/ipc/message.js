@@ -1,5 +1,4 @@
 class MessageBus {
-
     constructor() {
         this.handlers = new Map();
         this.message_id = 0;
@@ -20,15 +19,9 @@ class MessageBus {
         const request_id = ++this.message_id;
         const response_key = `${message_type}_${request_id}`;
         
-        return new Promise((resolve, reject) => {
-            
-            // const timer = setTimeout(() => {
-            //     this.pending.delete(response_key);
-            //     reject(new Error(`timeout waiting for ${message_type}`));
-            // }, timeout_ms);
+        return new Promise((resolve) => {
            
             this.pending.set(response_key, (response) => {
-                // clearTimeout(timer);
                 this.pending.delete(response_key);
                 resolve(response);
             });
@@ -42,7 +35,6 @@ class MessageBus {
            
             const serialized = msgpack.encode(message_data);
             const base64 = btoa(String.fromCharCode(...new Uint8Array(serialized)));
-           
             window.external.sendMessage(base64);
         });
     }

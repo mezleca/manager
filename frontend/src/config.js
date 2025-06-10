@@ -81,12 +81,17 @@ export const load_db = async () => {
 
 export const load_cl = async () => {
     const db_result = await ipc.send("load_collections");
-    console.log(db_result);
     if (!db_result.success) {
         create_alert("failed to load collection", { type: "error" });
     }
 };
 
 export const load_files = async () => {
-    await Promise.all([load_db(), load_cl()]);
+    const results = await Promise.all([load_db(), load_cl()]);
+
+    if (results.includes(false)) {
+        return false;
+    }
+    
+    return true;
 };

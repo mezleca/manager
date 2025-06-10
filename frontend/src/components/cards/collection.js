@@ -19,12 +19,12 @@ export const create_collection_card = (id, name, count) => {
     container.id = id;
 
     const data = {
-        name: container.querySelector(".collection_name"),
+        name: container.querySelector(".collection-name"),
         count: container.querySelector(".collection-count"),
     };
 
     data.name.textContent = name;
-    data.count.textContent = count;
+    data.count.textContent = `${count} maps`;
 
     return {
         container: container,

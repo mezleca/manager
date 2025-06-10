@@ -1,5 +1,6 @@
 import { initialize_config, config, load_files } from "./config.js";
 import { ipc } from "./ipc/message.js";
+import { initialize_collections } from "./manager/manager.js";
 
 const tabs = document.querySelectorAll(".tab");
 const tab_contents = document.querySelectorAll(".tab-content");
@@ -42,19 +43,25 @@ expand_buttons.forEach((btn, index) => {
     });
 });
 
-// remove it until i implement window movement with chromeless mode
+// removd until i implement window movement with chromeless mode
 document.querySelector(".window-controls").style.display = "none";
-
-// setup message handler
 window.external.receiveMessage(ipc.handle_message);
 
 // disable page zoom
 window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault() }, { passive: false });
 
+// config description links
+open_links_on_browser();
+
 (async () => {
 	await initialize_config();
 	await ipc.send("update_config", config);
-	await load_files();
 
-	open_links_on_browser();
+	const load_result = await load_files();
+
+	if (!load_result) {
+		return;
+	}
+
+	await initialize_collections();
 })();

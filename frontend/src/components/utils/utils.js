@@ -1,3 +1,7 @@
+import { ipc } from "../../ipc/message.js";
+
+const beatmap_cache = new Map();
+
 export const REMOVE_SVG =
 `<svg viewBox="0 0 10 10" width="14px" height="14px" stroke="currentColor" stroke-width="2">
     <path d="M1,1 9,9 M9,1 1,9" />
@@ -57,6 +61,38 @@ export const debounce = (func, timeout = 100) => {
     };
 };
 
+/*
+    --- BEATMAP SHIT ---
+*/
+
+export const get_beatmap = async (md5) => {
+
+    // limit cache size
+    if (beatmap_cache.size >= 500) {
+
+        const first = beatmap_cache.keys().next().value;
+
+        if (first != undefined) {
+            beatmap_cache.delete(first);
+        }
+    }
+
+    if (beatmap_cache.has(md5)) {
+        return beatmap_cache.get(md5);
+    }
+
+    const result = await ipc.send("get_beatmap", { md5: md5 });
+
+    if (result.found) {
+        beatmap_cache.set(md5, result);
+    }
+
+    return result;
+};
+
+/*
+    --- REQUEST SHIT ---
+*/
 export const osu_login = async (id, secret) => {
     try {
         const form_data = new FormData();

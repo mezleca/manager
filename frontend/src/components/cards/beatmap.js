@@ -42,9 +42,11 @@ export const toggle_control_preview = (el) => {
     el.textContent = el.textContent == "▶" ? el.textContent = "⏸" : el.textContent = "⏸";
 };
 
-export const create_beatmap_card = (beatmap) => {
+export const create_beatmap_card = () => {
+    return create_element(BEATMAP_CARD_TEMPLATE);;
+};
 
-    const container = create_element(BEATMAP_CARD_TEMPLATE);
+export const update_beatmap_card = (container, beatmap) => {
 
     const metadata = {
         title: container?.querySelector(".beatmap-title"),
@@ -64,6 +66,8 @@ export const create_beatmap_card = (beatmap) => {
     // right by default is remove (if local)
     set_control_to_remove(controls.right);
 
+    console.log(beatmap);
+
     // from discover
     if (!beatmap?.local) {
         set_control_to_add(controls.right);
@@ -74,7 +78,5 @@ export const create_beatmap_card = (beatmap) => {
         set_control_to_download(controls.right);
     }
 
-    // @TODO: create beatmap object type so i can do shit
-
-    return container;
+    
 };

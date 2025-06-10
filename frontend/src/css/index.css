@@ -386,8 +386,19 @@ body {
 
 .beatmaps-container {
     flex: 1;
-    overflow-y: scroll;
-    padding: 30px 20px 20px;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+.manager-beatmaps-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    /* @TODO: not hardcore the px amount*/
+    height: calc(100% - 110px);
 }
 
 .beatmaps-header {
@@ -418,6 +429,22 @@ body {
     transform: translateY(-1px);
 }
 
+.virtual-list {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.virtual-column-grid {
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    top: 0;
+    width: 100%;
+    gap: 16px;
+}
+
 .container-column-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -441,7 +468,6 @@ body {
 }
 
 .beatmap-card:hover {
-    transform: translateY(-4px) scale(1.02);
     border-color: var(--header-border-color);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
@@ -626,6 +652,9 @@ body {
     flex: 1;
     background: var(--bg-color);
     position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 .config-container {
@@ -704,11 +733,7 @@ body {
     display: grid;
     margin-top: 10px;
     gap: 10px;
-}
-
-*::-webkit-scrollbar {
-    display: none;
-}
+} 
 
 .field-group {
     margin-bottom: 24px;
@@ -1253,6 +1278,9 @@ input[type="range"]::-moz-range-track {
     .container-column-grid {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
+    .virtual-column-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    } 
     .config-content {
         grid-template-columns: 50% 50%;
     }

@@ -2,14 +2,16 @@ import { create_element, REMOVE_SVG, PLUS_SVG, DOWNLOAD_SVG } from "../utils/uti
 
 const BEATMAP_CARD_TEMPLATE = `
 <div class="beatmap-card">
-    <div class="beatmap-bg"></div>
+    <div class="beatmap-bg">
+        <img></img>
+    </div>
     <div class="beatmap-controls">
         <button class="control-icon">▶</button>
         <button class="control-icon">×</button>
     </div>
     <div class="beatmap-info">
         <div class="beatmap-title">UNKNOWN</div>
-        <div class="beatmap-subtitle"></div>
+        <div class="beatmap-subtitle">UNKNOWN</div>
         <div class="beatmap-stats">
             <span class="stat-badge ranked">UNKNOWN</span>
             <span class="star-rating">★ 0.00</span>
@@ -43,16 +45,17 @@ export const toggle_control_preview = (el) => {
 };
 
 export const create_beatmap_card = () => {
-    return create_element(BEATMAP_CARD_TEMPLATE);;
+    return create_element(BEATMAP_CARD_TEMPLATE);
 };
 
-export const update_beatmap_card = (container, beatmap) => {
+export const update_beatmap_card = (container, beatmap, remove) => {
 
     const metadata = {
         title: container?.querySelector(".beatmap-title"),
         subtitle: container?.querySelector(".beatmap-subtitle"),
         badge: container?.querySelector(".stat-badge"),
         star_rating: container?.querySelector(".star-rating"),
+        background: container?.querySelector(".beatmap-bg").children[0]
     };
 
     const controls = {
@@ -63,20 +66,23 @@ export const update_beatmap_card = (container, beatmap) => {
     // left by default is preview
     set_control_to_preview(controls.left);
 
-    // right by default is remove (if local)
-    set_control_to_remove(controls.right);
-
-    console.log(beatmap);
-
     // from discover
     if (!beatmap?.local) {
         set_control_to_add(controls.right);
     }
-
-    // from discover but downloaded
-    if (!beatmap?.local && beatmap.downloaded) {
+    // from discover but not downloaded
+    else if (!beatmap?.local && beatmap.downloaded) {
         set_control_to_download(controls.right);
     }
+    // remove by default 
+    else {
+        set_control_to_remove(controls.right);
+        controls.right.addEventListener("click", remove);
+    }
 
-    
+    metadata.title.textContent = `${beatmap.artist} - ${beatmap.title}`;
+    metadata.subtitle.textContent = beatmap.difficulty;
+    metadata.background.src = `https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg`;
+
+    container.id = beatmap.md5;
 };

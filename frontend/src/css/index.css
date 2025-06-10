@@ -5,6 +5,10 @@
     src: local('Torus Bold'), url('./Torus.otf') format('opentype');
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     --accent-color: #ff4081;
     --accent-color-half: #ff408083;
@@ -498,12 +502,21 @@ body {
     font-size: 16px;
     margin-bottom: 4px;
     color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-wrap: wrap;
 }
 
 .beatmap-subtitle {
     color: var(--tab-bg-color);;
     font-size: 14px;
     margin-bottom: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .beatmap-stats {
@@ -625,6 +638,10 @@ body {
     border-radius: 4px;
     font-size: 10px;
     animation: pulse 2s infinite;
+}
+
+*::-webkit-scrollbar {
+    display: none;
 }
 
 ::-webkit-scrollbar {
@@ -1134,10 +1151,6 @@ input[type="range"]::-moz-range-track {
     display: flex;
     font-size: 1.5em;
     justify-self: center;
-}
-
-.alert-alert::-webkit-scrollbar {
-    display: none;
 }
 
 .popup-container {

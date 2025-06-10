@@ -21,7 +21,6 @@ public class MessageBus
 
             if (_handlers.TryGetValue(msg_data.Type, out var handler))
             {
-                Console.WriteLine(msg_data.Type);
                 await handler.Handle(msg_data.Id, msg_data.Send, msg_data.Data);
                 await SendConfirmation(msg_data.Id, msg_data.Type);
             }

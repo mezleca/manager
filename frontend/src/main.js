@@ -53,6 +53,9 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 // config description links
 open_links_on_browser();
 
+// disable default context menu
+window.addEventListener("contextmenu", (event) => event.preventDefault());
+
 (async () => {
 	await initialize_config();
 	await ipc.send("update_config", config);

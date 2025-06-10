@@ -1,9 +1,13 @@
 import { create_element, debounce } from "./utils.js";
 
+// @TODO: ts is not optimized at all
+
 export const virtual_lists = new Map();
 
 const element_size_cache = new Map();
-const BUFFER = 4;
+const elements_cache = new Map();
+
+const BUFFER = 2;
 
 export const get_element_size = (element, id, force = false) => {
     if (!force && element_size_cache.has(id)) return element_size_cache.get(id);
@@ -45,10 +49,21 @@ export const render = (id, force) => {
     const elements = [];
     
     for (let i = start_index; i < end_index; i++) {
-        const data = virtual_list.create(i);
-        if (virtual_list.update) {
-            virtual_list.update({ ...data, index: i });
+        
+        // get and id to see if the element has already been created somewhere
+        const id = virtual_list.get(i);
+        let data = null;
+
+        if (elements_cache.has(id)) {
+            data = elements_cache.get(id);
+            elements_cache.set(data.id, data.element);
+        } else {
+            data = virtual_list.create(i);
+            if (virtual_list.update) {
+                virtual_list.update({ ...data, index: i });
+            }
         }
+
         elements.push(data.element);
     }
     
@@ -81,6 +96,7 @@ export const create_virtual_list = (id, target) => {
         should_render: false,
         create: null,
         update: null,
+        get: null,
         show: () => { container.style.display = "grid"; },
         hide: () => { container.style.display = "none"; },
         calc: async (callback) => {
@@ -100,6 +116,7 @@ export const create_virtual_list = (id, target) => {
             if (force == true) {
                 list.should_render = true;
                 list.calc(list.refresh);
+                container.scrollTop = 0; // dont preserve scroll
                 return;
             }
             if (!list.should_render) return;
@@ -114,8 +131,10 @@ export const create_virtual_list = (id, target) => {
         }
     };
 
-    window.addEventListener("resize", () => { list.calc(); });
     container.addEventListener("scroll", debounce(list.refresh, 5));
+    window.addEventListener("resize", () => {
+        debounce(list.calc, 5)();
+    });
 
     container.appendChild(list_container);
     container.appendChild(fake_height);

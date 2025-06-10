@@ -45,20 +45,21 @@ export const initialize_collections = async () => {
             document.querySelector(".collection-item.active")?.classList.remove("active");
             new_card.container.classList.add("active");
 
+            manager_list.get = (index) => collection.hashes[index];
             manager_list.create = ((index) => {
-                return { element: create_beatmap_card() };
+                return { element: create_beatmap_card(), id: collection.hashes[index] };
             });
 
             manager_list.update = (async ({ element, index }) => {
                 const hash = collection.hashes[index];
                 const beatmap = await get_beatmap(hash);
 
-                element.addEventListener("click", () => {
+                const remove_card = () => {
                     collection.hashes.splice(index, 1); 
                     manager_list.remove(element);
-                });
+                };
 
-                update_beatmap_card(element, beatmap);
+                update_beatmap_card(element, beatmap, remove_card);
             });
 
             manager_list.length = collection.size;

@@ -9,16 +9,42 @@ const elements_cache = new Map();
 
 const BUFFER = 2;
 
+const element_pool = new Map();
+
+const get_pooled_element = (id, create) => {
+    if (!element_pool.has(id)) {
+        element_pool.set(id, []);
+    }
+    
+    const pool = element_pool.get(id);
+    return pool.pop() || create();
+};
+
+const return_to_pool = (id, element) => {
+    if (!element_pool.has(id)) element_pool.set(id, []);
+    element_pool.get(id).push(element);
+};
+
 export const get_element_size = (element, id, force = false) => {
-    if (!force && element_size_cache.has(id)) return element_size_cache.get(id);
+    if (!force && element_size_cache.has(id)) {
+        return element_size_cache.get(id);
+    }
 
+    const fragment = document.createDocumentFragment();
     const new_el = element.cloneNode(true);
+    
+    Object.assign(new_el.style, { 
+        visibility: "hidden", 
+        position: "absolute", 
+        top: "-9999px"
+    });
 
-    Object.assign(new_el.style, { visibility: "hidden", position: "absolute", top: "-9999px" });
-
-    document.body.appendChild(new_el);
+    fragment.appendChild(new_el);
+    document.body.appendChild(fragment);
+    
     const rect = new_el.getBoundingClientRect();
     new_el.remove();
+    
     element_size_cache.set(id, rect);
     return rect;
 };
@@ -45,32 +71,55 @@ export const render = (id, force) => {
         length == last_render.total_length) {
         return;
     }
-    
-    const elements = [];
-    
-    for (let i = start_index; i < end_index; i++) {
-        
-        // get and id to see if the element has already been created somewhere
-        const id = virtual_list.get(i);
-        let data = null;
 
-        if (elements_cache.has(id)) {
-            data = elements_cache.get(id);
-            elements_cache.set(data.id, data.element);
-        } else {
-            data = virtual_list.create(i);
-            if (virtual_list.update) {
-                virtual_list.update({ ...data, index: i });
-            }
+    const fragment = document.createDocumentFragment();
+    const visible_elements = [];
+
+    if (last_render.elements) {
+        for (let i = 0; i < last_render.elements.length; i++) {
+            const el = last_render.elements[i];
+            if (el.dataset.pool_id) return_to_pool(el.dataset.pool_id, el);
         }
-
-        elements.push(data.element);
     }
     
-    virtual_list.list_container.style.transform = `translateY(${first_row * item_height}px)`;
-    virtual_list.list_container.replaceChildren(...elements);
+     for (let i = start_index; i < end_index; i++) {
+        const item_id = virtual_list.get(i);
+        let data = null;
+        
+        if (elements_cache.has(item_id)) {
+            data = elements_cache.get(item_id);
+        } else {
+            const pooled = get_pooled_element(item_id, () => virtual_list.create(i));
+            data = pooled.element ? pooled : virtual_list.create(i);
+            
+            if (data.element) {
+                data.element.dataset.pool_id = item_id;
+            }
+            
+            elements_cache.set(item_id, data);
+        }
+
+        if (virtual_list.update && data.needs_update != false) {
+            virtual_list.update({ ...data, index: i });
+            data.needs_update = false;
+        }
+
+        if (data.element) {
+            fragment.appendChild(data.element);
+            visible_elements.push(data.element);
+        }
+    }
     
-    virtual_list.last_render = { start: start_index, end: end_index };
+    virtual_list.list_container.style.transform = `translate3d(0, ${first_row * item_height}px, 0)`;
+    virtual_list.list_container.innerHTML = "";
+    virtual_list.list_container.appendChild(fragment);
+    
+    virtual_list.last_render = { 
+        start: start_index, 
+        end: end_index, 
+        total_length: length,
+        elements: visible_elements 
+    };
 };
 
 export const get_column_amount = (container) => {
@@ -82,6 +131,9 @@ export const create_virtual_list = (id, target) => {
     const container = create_element(`<div class="virtual-list ${id}"></div>`);
     const list_container = create_element(`<div class="virtual-column-grid ${id}"></div>`);
     const fake_height = create_element(`<div class="fake-height" style="height: 100%;"></div>`);
+
+    container.style.willChange = "scroll-position";
+    list_container.style.willChange = "transform";
 
     const list = {
         id,
@@ -131,10 +183,13 @@ export const create_virtual_list = (id, target) => {
         }
     };
 
-    container.addEventListener("scroll", debounce(list.refresh, 5));
-    window.addEventListener("resize", () => {
-        debounce(list.calc, 5)();
-    });
+    container.addEventListener("scroll", debounce(() => {
+        list.refresh();
+    }, 10));
+    
+    window.addEventListener("resize", debounce(() => {
+        list.calc(() => list.refresh(true));
+    }, 50));
 
     container.appendChild(list_container);
     container.appendChild(fake_height);

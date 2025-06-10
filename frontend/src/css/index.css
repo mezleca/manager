@@ -14,10 +14,13 @@ html {
     --accent-color-half: #ff408083;
     --accent-color2: #ff408091;
     --bg-color: #1a1a1a;
+    --bg-primary: #28282c;
+    --bg-secondary: #212122;
     --tab-bg-color: #888;
     --tab-bg-color2: #242424;
     --header-bg-color: #2d2d2d;
     --header-border-color: #404040;
+    --text-color: rgb(231, 231, 231);
     --header-height: 60px;
     --transition-delay: 0.3s;
     --context-fade-delay: 0.15s;
@@ -461,93 +464,85 @@ body {
     gap: 16px;
 }
 
-.beatmap-card {
-    background: var(--tab-bg-color2);
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
+.default-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--tab-bg-color);
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid transparent;
-}
-
-.beatmap-card:hover {
-    border-color: var(--header-border-color);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.beatmap-bg {
-    height: 120px;
-    background: linear-gradient(135deg, #ff4081, #ff8a80);
-    position: relative;
+    transition: all 0.2s ease;
     overflow: hidden;
+    position: relative;
+    height: 300px;
 }
 
-.beatmap-bg::before {
+.default-card:hover {
+    .cover {
+        transform: scale(1.03) translateY(4px);
+    }
+    border-color: var(--accent-color);
+}
+
+.default-card .cover {
+    width: 100%;
+    height: 70%;
+    background-size: cover;
+    background-position: center;
+    object-fit: cover;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.default-card .cover::after {
     content: "";
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-    animation: shimmer 3s infinite;
+    height: 40px;
+    background: linear-gradient(transparent, var(--bg-secondary));
 }
 
-.beatmap-info {
-    padding: 16px;
+.default-card .info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: var(--bg-secondary);
 }
 
-.beatmap-title {
-    font-size: 16px;
-    margin-bottom: 4px;
-    color: #fff;
-    white-space: nowrap;
+.default-card .title {
+    font-size: 15px;
+    color: var(--text-color);
+    margin-bottom: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
-    text-wrap: wrap;
+    white-space: nowrap;
 }
 
-.beatmap-subtitle {
-    color: var(--tab-bg-color);;
-    font-size: 14px;
-    margin-bottom: 12px;
-    white-space: nowrap;
+.default-card .subtitle {
+    font-size: 13px;
+    color: var(--text-color);
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
+    white-space: nowrap;
 }
 
-.beatmap-stats {
+.default-card .stats {
     display: flex;
-    gap: 12px;
+    justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
 }
 
-.stat-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+.default-card .stat {
+    color: var(--text-color);
+    font-size: 10px;
     text-transform: uppercase;
 }
 
-.ranked {
-    background: #4caf50;
-    color: white;
-}
-
-.pending {
-    background: #ff9800;
-    color: white;
-}
-
-.star-rating {
-    background: var(--accent-color);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+.default-card .stars {
+    color: var(--accent-color);
+    font-size: 12px;
 }
 
 .beatmap-controls {
@@ -558,11 +553,6 @@ body {
     gap: 8px;
     opacity: 0;
     transition: all 0.3s ease;
-}
-
-.beatmap-card:hover .beatmap-controls {
-    opacity: 1;
-    transform: translateY(-2px);
 }
 
 .control-icon {
@@ -983,14 +973,12 @@ body {
 }
 
 .slider-label {
-    font-weight: 600;
     font-size: 14px;
     margin-right: 5px;
     color: #f0f0f0;
 }
 
 .slider-values {
-    font-weight: 500;
     font-size: 14px;
     color: #ff66aa;
 }
@@ -1199,7 +1187,6 @@ input[type="range"]::-moz-range-track {
 
 .popup-content-flex > label {
     font-size: 1em;
-    font-weight: bold;
     margin-left: 5px;
     margin: 0;
     margin-bottom: 5px;

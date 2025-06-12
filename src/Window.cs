@@ -1,5 +1,6 @@
+using System;
+using System.Threading.Tasks;
 using Photino.NET;
-using System.Drawing;
 using IPC;
 using System.Runtime.InteropServices;
 using IPC.Handlers;
@@ -19,8 +20,8 @@ public class Window
         window = new PhotinoWindow()
             .SetTitle("osu manager")
             .SetUseOsDefaultSize(false)
-            .SetSize(1024, 800)
-            .SetMinSize(800, 700)
+            .SetSize(1366, 800)
+            .SetMinSize(1024, 700)
             .Center()
             .SetResizable(true)
             .SetLogVerbosity(0)

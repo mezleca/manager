@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Platforms>AnyCPU</Platforms>
@@ -15,6 +15,9 @@
 
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+
+    <!-- app icon -->
+    <ApplicationIcon>frontend\static\icon.ico</ApplicationIcon>
 
     <!-- Enable compression for the single executable -->
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>

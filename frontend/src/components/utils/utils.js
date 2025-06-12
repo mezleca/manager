@@ -2,14 +2,25 @@ import { ipc } from "../../ipc/message.js";
 
 const beatmap_cache = new Map();
 
+export const PLAY_SVG = 
+`<svg viewBox="0 0 84 100" fill="currentColor" style="width: 14px;">
+    <polygon points="10,0 10,100 90,50"/>
+</svg>`;
+
+export const PAUSE_SVG = 
+`<svg viewBox="0 0 100 100" fill="currentColor" style="width: 14px;">
+    <rect x="15" y="0" width="25" height="100"/>
+    <rect x="65" y="0" width="25" height="100"/>
+</svg>`;
+
 export const REMOVE_SVG =
 `<svg viewBox="0 0 10 10" width="14px" height="14px" stroke="currentColor" stroke-width="2">
     <path d="M1,1 9,9 M9,1 1,9" />
 </svg>`;
 
 export const DOWNLOAD_SVG =
-`<svg id="play-button" viewBox="0 0 84 100" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-    <polygon points="10,0 10,100 90,50"/>
+`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
 </svg>`;
 
 export const PLUS_SVG =

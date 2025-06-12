@@ -1,11 +1,10 @@
-import { create_element, REMOVE_SVG, PLUS_SVG, DOWNLOAD_SVG } from "../utils/utils.js";
+import { create_element, REMOVE_SVG, PLUS_SVG, DOWNLOAD_SVG, PLAY_SVG, PAUSE_SVG } from "../utils/utils.js";
 
 const BEATMAP_CARD_TEMPLATE = `
-<div class="default-card">
-    <div class="cover"></div>
+<div class="small-card">
     <div class="beatmap-controls">
-        <button class="control-icon">▶</button>
-        <button class="control-icon">×</button>
+        <button class="control-icon"></button>
+        <button class="control-icon"></button>
     </div>
     <div class="info">
         <div class="title">title</div>
@@ -19,7 +18,7 @@ const BEATMAP_CARD_TEMPLATE = `
 `;
 
 export const set_control_to_preview = (el) => {
-    el.textContent = "▶";
+    el.innerHTML = PLAY_SVG;
     el.dataset.type = "preview";
 };
 
@@ -39,11 +38,11 @@ export const set_control_to_add = (el) => {
 };
 
 export const toggle_control_preview = (el) => {
-    el.textContent = el.textContent == "▶" ? el.textContent = "⏸" : el.textContent = "⏸";
+    el.innerHTML = el?.dataset.paused ? PLAY_SVG : PAUSE_SVG;
+    el.dataset.paused = !el.dataset.paused;
 };
 
 export const create_beatmap_card = () => {
-    console.log("creating element");
     return create_element(BEATMAP_CARD_TEMPLATE);
 };
 
@@ -80,7 +79,7 @@ export const update_beatmap_card = (container, beatmap, remove) => {
 
     metadata.title.textContent = `${beatmap.artist} - ${beatmap.title}`;
     metadata.subtitle.textContent = beatmap.difficulty;
-    metadata.background.style.backgroundImage = `url(https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg)`;
 
+    container.style.backgroundImage = `url(https://assets.ppy.sh/beatmaps/${beatmap.beatmapset_id}/covers/cover.jpg)`;
     container.id = beatmap.md5;
 };

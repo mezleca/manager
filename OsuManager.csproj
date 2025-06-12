@@ -7,6 +7,23 @@
     <Platforms>AnyCPU</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+
+    <!-- Bundle .NET runtime -->
+    <SelfContained>true</SelfContained>
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+
+    <!-- Enable compression for the single executable -->
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+
+    <!--
+    Disable default content for better control of which files are bundled.
+    See https://docs.microsoft.com/en-us/dotnet/core/deploying/single-file#default-content-in-single-file-bundles
+    -->
+    <EnableDefaultContent>false</EnableDefaultContent>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <ItemGroup>

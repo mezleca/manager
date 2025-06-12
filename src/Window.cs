@@ -22,7 +22,6 @@ public class Window
             .SetSize(1024, 800)
             .SetMinSize(800, 700)
             .Center()
-            .SetIconFile($"frontend/static/icon.{(is_linux ? "png" : "ico")}") // will this work on publish? only god knows
             .SetResizable(true)
             .SetLogVerbosity(0)
             .Load("frontend/index.html");

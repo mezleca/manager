@@ -11,7 +11,7 @@ if [ -z "$CSPROJ_FILE" ]; then
 fi
 
 APP_NAME=$(basename "$CSPROJ_FILE" .csproj)
-APP_VERSION="2.0.0-1"
+APP_VERSION="2.0.0"
 
 # colors
 RED='\033[0;31m'
@@ -41,7 +41,7 @@ check_deps() {
     # check for appimage tools
     if ! command -v appimagetool &> /dev/null; then
         log "installing appimage tools..."
-        wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        wget -O appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool
         sudo mv appimagetool /usr/local/bin/
     fi
@@ -106,7 +106,7 @@ Version: $APP_VERSION
 Section: utils
 Priority: optional
 Architecture: amd64
-Maintainer: Developer <dev@example.com>
+Maintainer: Developer <yes@yes.com>
 Description: $APP_NAME application
 EOF
 

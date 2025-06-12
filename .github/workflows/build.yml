@@ -1,0 +1,58 @@
+name: build
+on:
+  create:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev build-essential dotnet-runtime-8.0 dotnet-sdk-8.0 dotnet8 zip
+          mkdir -p /usr/local/bin
+          curl -L https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -o /usr/local/bin/appimagetool
+          chmod +x /usr/local/bin/appimagetool
+      - name: set build script perms
+        run: chmod +x ./build.sh
+      - name: build manager
+        run: sudo ./build.sh
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: |
+            dist/**
+            dist/**
+  create-release:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: get tag version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT      
+      - name: download
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: artifacts/build     
+      - name: download binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: artifacts/build       
+      - name: create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.get_version.outputs.VERSION }}
+          body_path: ./changelog/${{ steps.get_version.outputs.VERSION }}/NOTES.md
+          files: |
+            ./artifacts/build/**
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -9,9 +9,9 @@ also using c# (Photino) instead of go (wails)
 # TODO LIST
 ## not priority but needed to v2 release
 - [ ] window: figure out a way to implement chromeless (frameless) mode (well, theres an option to enable but i have no idea how to make the window move on drag)
-- [ ] window: uhhh, how can i actually use icons (linux doenst even show on the window title lol)?
+- [x] window: icons on build
 - [ ] osdb: .osdb parser (literally just copy & paste from the collection manager project)
-- [ ] workflow: auto release on tag creation (windows / linux binaries)
+- [x] workflow: auto release on tag creation (windows / linux binaries)
 - [ ] lazer: add real time realm update (if possible)
 - [ ] app: discover tab (from osu! api)
 - [ ] ipc: multiple file sellection support on dialog
@@ -33,6 +33,6 @@ also using c# (Photino) instead of go (wails)
 - [x] ipc: handlers to open dialogs
 - [ ] app: browse beatmaps tab (from osu! local database)
 - [ ] app: download manager
-- [ ] app: build script
+- [x] app: build script
 - [ ] app: move v1 frontend logic to js (virtual list, popup, progress, etc...) 
 - [ ] app: move v1 backend logic to c# (filters, get_sr, get_bpm, etc...)

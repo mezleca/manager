@@ -33,6 +33,7 @@ also using c# (Photino) instead of go (wails)
 - [x] ipc: handlers to open dialogs
 - [ ] app: browse beatmaps tab (from osu! local database)
 - [ ] app: download manager
+- [x] app: fetch helper (get data / download binary)
 - [x] app: build script
 - [ ] app: move v1 frontend logic to js (virtual list, popup, progress, etc...) 
 - [ ] app: move v1 backend logic to c# (filters, get_sr, get_bpm, etc...)

@@ -1,8 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using Photino.NET;
 using IPC;
-using System.Runtime.InteropServices;
 using IPC.Handlers;
 using Main.Manager;
 

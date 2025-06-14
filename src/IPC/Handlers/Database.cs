@@ -3,12 +3,11 @@ using IPC;
 
 namespace Main.Manager;
 
-public class LoadOsuDataHandler : BaseMessageHandler<OsuDataRequest, OsuDataResponse>
+public class LoadOsuDataHandler : AsyncRequestResponseHandler<OsuDataRequest, OsuDataResponse>
 {
     public override string MessageType => "load_database";
-    public override async Task Handle(int id, bool send, OsuDataRequest data) => await Task.CompletedTask;
 
-    protected override async Task<OsuDataResponse?> ProcessRequest(OsuDataRequest request)
+    protected override async Task<OsuDataResponse?> ProcessRequestAsync(OsuDataRequest request)
     {
         var response = new OsuDataResponse{ Success = false };
 
@@ -23,7 +22,7 @@ public class LoadOsuDataHandler : BaseMessageHandler<OsuDataRequest, OsuDataResp
 }
 
 [MessagePackObject]
-public class OsuDataRequest {}
+public class OsuDataRequest { }
 
 [MessagePackObject]
 public class OsuDataResponse {

@@ -1,6 +1,8 @@
+using System.Runtime.InteropServices;
 using IPC;
 using IPC.Handlers;
 using Main.Manager;
+using Photino.NET;
 
 namespace Main;
 
@@ -31,18 +33,23 @@ public class Window
     {
         var bus = new MessageBus();
 
+        // collections
         bus.RegisterHandler(new GetCollectionHandler());
-        bus.RegisterHandler(new LoadOsuDataHandler());
+        bus.RegisterHandler(new GetCollectionsHandler());
+        bus.RegisterHandler(new SetCollectionHandler());
         bus.RegisterHandler(new ReloadCollectionHandler());
+
+        // beatmaps
+        bus.RegisterHandler(new GetBeatmapsHandler());
+
+        // osu / files
+        bus.RegisterHandler(new LoadOsuDataHandler());
         bus.RegisterHandler(new UpdateConfigHandler());
         bus.RegisterHandler(new ShowDialogHandler());
+
+        // extra
         bus.RegisterHandler(new OpenHandler());
         bus.RegisterHandler(new GetBeatmapHandler());
-        bus.RegisterHandler(new GetCollectionsHandler());
-        bus.RegisterHandler(new GetBeatmapsHandler());
-        bus.RegisterHandler(new SetCollectionHandler());
-
-        bus.ShowHandlers();
 
         window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }

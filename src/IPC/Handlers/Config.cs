@@ -4,11 +4,11 @@ using Main.Manager;
 
 namespace IPC.Handlers;
 
-public class UpdateConfigHandler : IMessageHandler<ConfigUpdateRequest>
+public class UpdateConfigHandler : MessageHandler<ConfigUpdateRequest>
 {
-    public string MessageType => "update_config";
-
-    public async Task Handle(int id, bool send, ConfigUpdateRequest data)
+    public override string MessageType => "update_config";
+    
+    protected override void ProcessMessage(ConfigUpdateRequest data)
     {
         Manager.config.UpdateFrom(new Config {
             Id = data.Id,
@@ -21,9 +21,7 @@ public class UpdateConfigHandler : IMessageHandler<ConfigUpdateRequest>
             Lazer = data.Lazer,
             Local = data.Local,
         });
-
-        await Task.CompletedTask;
-    }    
+    }
 }
 
 [MessagePackObject]

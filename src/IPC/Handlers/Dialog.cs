@@ -3,12 +3,11 @@ using Main;
 
 namespace IPC.Handlers;
 
-public class ShowDialogHandler : BaseMessageHandler<DialogRequest, DialogResponse>
+public class ShowDialogHandler : AsyncRequestResponseHandler<DialogRequest, DialogResponse>
 {
     public override string MessageType => "show_dialog";
-    public override async Task Handle(int id, bool send, DialogRequest data) => await Task.CompletedTask;
 
-    protected override async Task<DialogResponse?> ProcessRequest(DialogRequest request)
+    protected override async Task<DialogResponse?> ProcessRequestAsync(DialogRequest request)
     {
         string[]? result = request.Type == "file" 
             ? await (Window.window?.ShowOpenFileAsync(multiSelect: request.Multi) ?? Task.FromResult<string[]?>(null))

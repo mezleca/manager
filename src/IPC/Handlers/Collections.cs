@@ -3,12 +3,11 @@ using MessagePack;
 
 namespace IPC.Handlers;
 
-public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, CollectionResponse>
+public class GetCollectionHandler : AsyncRequestResponseHandler<CollectionRequest, CollectionResponse>
 {
     public override string MessageType => "get_collection";
-    public override async Task Handle(int id, bool send, CollectionRequest data) => await Task.CompletedTask;
 
-    protected override Task<CollectionResponse?> ProcessRequest(CollectionRequest request)
+    protected override Task<CollectionResponse?> ProcessRequestAsync(CollectionRequest request)
     {
         var result = new CollectionResponse { Found = false, Name = request.Name };
 
@@ -53,12 +52,11 @@ public class GetCollectionHandler : BaseMessageHandler<CollectionRequest, Collec
     }
 }
 
-public class GetCollectionsHandler : BaseMessageHandler<EmptyOBJ, CollectionsResponse>
+public class GetCollectionsHandler : AsyncRequestResponseHandler<EmptyOBJ, CollectionsResponse>
 {
     public override string MessageType => "get_collections";
-    public override async Task Handle(int id, bool send, EmptyOBJ data) => await Task.CompletedTask;
 
-    protected override Task<CollectionsResponse?> ProcessRequest(EmptyOBJ request)
+    protected override Task<CollectionsResponse?> ProcessRequestAsync(EmptyOBJ request)
     {
         CollectionsResponse result = new() {
             Success = false,
@@ -108,12 +106,11 @@ public class GetCollectionsHandler : BaseMessageHandler<EmptyOBJ, CollectionsRes
     }
 }
 
-public class ReloadCollectionHandler : BaseMessageHandler<EmptyOBJ, LoadCollectionResponse>
+public class ReloadCollectionHandler : AsyncRequestResponseHandler<EmptyOBJ, LoadCollectionResponse>
 {
     public override string MessageType => "load_collections";
-    public override async Task Handle(int id, bool send, EmptyOBJ data) => await Task.CompletedTask;
 
-    protected override async Task<LoadCollectionResponse?> ProcessRequest(EmptyOBJ request)
+    protected override async Task<LoadCollectionResponse?> ProcessRequestAsync(EmptyOBJ request)
     {
         var result = new LoadCollectionResponse{ Success = false };
 
@@ -127,16 +124,13 @@ public class ReloadCollectionHandler : BaseMessageHandler<EmptyOBJ, LoadCollecti
     }
 }
 
-public class SetCollectionHandler : BaseMessageHandler<SetCollectionRequest, SetCollectionResponse>
+public class SetCollectionHandler : AsyncRequestResponseHandler<SetCollectionRequest, SetCollectionResponse>
 {
     public override string MessageType => "set_collection";
-    public override async Task Handle(int id, bool send, SetCollectionRequest data) => await Task.CompletedTask;
 
-    protected override Task<SetCollectionResponse?> ProcessRequest(SetCollectionRequest request)
+    protected override Task<SetCollectionResponse?> ProcessRequestAsync(SetCollectionRequest request)
     {
         var result = new SetCollectionResponse{ Success = false };
-        Console.WriteLine(request.Name);
-
         try 
         {
             var beatmaps = Manager.config.Lazer == true ?

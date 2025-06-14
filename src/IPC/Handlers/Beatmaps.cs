@@ -5,12 +5,11 @@ using MessagePack;
 
 namespace IPC.Handlers;
 
-public class GetBeatmapHandler : BaseMessageHandler<BeatmapRequest, BeatmapResponse>
+public class GetBeatmapHandler : AsyncRequestResponseHandler<BeatmapRequest, BeatmapResponse>
 {
     public override string MessageType => "get_beatmap";
-    public override async Task Handle(int id, bool send, BeatmapRequest data) => await Task.CompletedTask;
-
-    protected override Task<BeatmapResponse?> ProcessRequest(BeatmapRequest request)
+    
+    protected override Task<BeatmapResponse?> ProcessRequestAsync(BeatmapRequest request)
     {
         BeatmapResponse? result = Manager.config.Lazer == true ? ProcessLazerBeatmap(request.Md5) : ProcessStableBeatmap(request.Md5);
         return Task.FromResult<BeatmapResponse?>(result);
@@ -127,12 +126,11 @@ public class GetBeatmapHandler : BaseMessageHandler<BeatmapRequest, BeatmapRespo
     }
 }
 
-public class GetBeatmapsHandler : BaseMessageHandler<BeatmapsRequest, BeatmapsResponse>
+public class GetBeatmapsHandler : AsyncRequestResponseHandler<BeatmapsRequest, BeatmapsResponse>
 {
     public override string MessageType => "get_beatmaps";
-    public override async Task Handle(int id, bool send, BeatmapsRequest data) => await Task.CompletedTask;
 
-    protected override Task<BeatmapsResponse?> ProcessRequest(BeatmapsRequest request)
+    protected override Task<BeatmapsResponse?> ProcessRequestAsync(BeatmapsRequest request)
     {
         var result = new BeatmapsResponse { Success = false, Beatmaps = [] };
 
@@ -148,7 +146,7 @@ public class GetBeatmapsHandler : BaseMessageHandler<BeatmapsRequest, BeatmapsRe
         return Task.FromResult<BeatmapsResponse?>(result);
     }
 
-    private BeatmapsResponse ProcessFilteredBeatmaps(BeatmapsRequest request)
+    private static BeatmapsResponse ProcessFilteredBeatmaps(BeatmapsRequest request)
     {
         var result = new BeatmapsResponse { Success = false, Beatmaps = [] };
         
@@ -186,7 +184,7 @@ public class GetBeatmapsHandler : BaseMessageHandler<BeatmapsRequest, BeatmapsRe
         return result;
     }
 
-    private BeatmapsResponse ProcessAllBeatmaps(BeatmapsRequest request)
+    private static BeatmapsResponse ProcessAllBeatmaps(BeatmapsRequest request)
     {
         var result = new BeatmapsResponse { Success = false, Beatmaps = [] };
 

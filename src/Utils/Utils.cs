@@ -121,7 +121,28 @@ public class Utils
     public static bool IsValidURL(string URL)
     {
         string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         return Rgx.IsMatch(URL);
+    }
+    public static bool SaveFile(Stream stream, string path)
+    {
+        if (stream == null || string.IsNullOrEmpty(path)) {
+            return false;
+        }
+
+        try
+        {
+            using var file_stream = File.Create(path);
+
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(file_stream);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return false;
+        }
     }
 }

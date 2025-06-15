@@ -2,6 +2,7 @@ using System;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace App;
 
@@ -32,27 +33,32 @@ public class Fetch {
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
-        
-        T? result = await JsonSerializer.DeserializeAsync<T>(stream, options, cancellationToken);
+
+        // annoying trim warning
+        var context = (JsonSerializerContext?)options.TypeInfoResolver?.GetType().GetProperty("Context")?.GetValue(options.TypeInfoResolver) 
+            ?? throw new InvalidOperationException("A JsonSerializerContext is required for trimming-safe deserialization.");
+
+        if (context.GetType().GetProperty("Default")?.GetValue(context) is not JsonTypeInfo<T> typeInfo) {
+            throw new InvalidOperationException("Could not obtain JsonTypeInfo for type " + typeof(T).FullName);
+        }
+
+        T? result = await JsonSerializer.DeserializeAsync<T>(stream, typeInfo, cancellationToken);
         return result;
     }
 
-    public static async Task Download(string url, string path, Dictionary<string, string> headers)
+    public static async Task<(int status, Stream buffer)> Download(string url, Dictionary<string, string> headers)
     {
         CancellationToken cancellationToken = new();
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        foreach (var kv in headers) { 
+        foreach (var kv in headers) {   
             request.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
         }
 
         using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        // 100mbs?
-        await using var source = await response.Content.ReadAsStreamAsync(cancellationToken);
-        await using var destination = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 102400, true);
-
-        await source.CopyToAsync(destination, 102400, cancellationToken);
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        return ((int)response.StatusCode, stream);
     }
 }

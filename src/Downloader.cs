@@ -8,7 +8,6 @@ public class Downloader
 {
     private static List<Download> downloads = new();
     private static List<Mirror> mirrors = [];
-    private static List<int> rate_values = new() { 429, 503, 504 };
     private static Dictionary<string, BeatmapApiResponse> beatmap_cache = [];
     private static string token = "";
 
@@ -85,8 +84,8 @@ public class Downloader
 
             // check if we are on a cooldown
             if (mirror.Cooldown != null) {
-                // only remove the cooldown after 5 min
-                if ((DateTime.Now - mirror.Cooldown.Value).TotalMinutes < 5) {
+                // check if we passed the cooldown
+                if (mirror.Cooldown.Value < DateTime.Now) {
                     continue;
                 }
 
@@ -104,9 +103,9 @@ public class Downloader
             var (status, buffer) = await Fetch.Download($"{url}/{id}", []);
 
             // add small cooldown if we get rate limited
-            if (rate_values.Contains(status)) {
+            if (status == 429) {
                 Console.WriteLine($"added rate limit to {mirror.Name}");
-                mirror.Cooldown = DateTime.Now;
+                mirror.Cooldown = DateTime.Now.AddMinutes(5);
                 mirrors[i] = mirror;
                 continue;
             }
@@ -119,7 +118,6 @@ public class Downloader
         return null;
     }
 
-    // nova funcao para processar beatmaps em paralelo
     public static async Task ProcessParallel(Download download) 
     {
         if (download.Beatmaps?.Count == 0) {
@@ -192,7 +190,6 @@ public class Downloader
 
         if (result == null) {
             Console.WriteLine($"failed to download beatmap from {data.Id}");
-            // @TODO: tell something to the frontend
             if (download != null) { }
             return false;
         }
@@ -201,7 +198,6 @@ public class Downloader
 
         // if we dont have a save location, stop the current download
         if (save_path == null) {
-            // @TODO: tell something to the frontend
             if (download != null) { }
             processing = false;
             return false;

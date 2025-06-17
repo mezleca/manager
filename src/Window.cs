@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Ipc.Handlers;
 using IPC;
 using IPC.Handlers;
 using Main.Manager;
@@ -33,6 +34,8 @@ public class Window
     {
         var bus = new MessageBus();
 
+        Console.WriteLine("initializing handlers");
+
         // collections
         bus.RegisterHandler(new GetCollectionHandler());
         bus.RegisterHandler(new GetCollectionsHandler());
@@ -50,6 +53,15 @@ public class Window
         // extra
         bus.RegisterHandler(new OpenHandler());
         bus.RegisterHandler(new GetBeatmapHandler());
+
+        // downloader
+        bus.RegisterHandler(new AddDownloadHandler());
+        bus.RegisterHandler(new DownloadHandler());
+        bus.RegisterHandler(new UpdateDownloadHandler());
+        bus.RegisterHandler(new GetDownloadsHandler());
+        bus.RegisterHandler(new AddTokenHandler());
+        bus.RegisterHandler(new AddMirrorHandler());
+        bus.RegisterHandler(new RemoveMirrorHandler());
 
         window?.RegisterWebMessageReceivedHandler((sender, message) => Task.Run(() => bus.HandleMessage(message)));
     }

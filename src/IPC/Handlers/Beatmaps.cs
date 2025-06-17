@@ -247,13 +247,10 @@ public class BeatmapsRequest
 {
     [Key("index")]
     public required int Index { get; set; }
-
     [Key("amount")]
     public int? Amount { get; set; }
-
     [Key("filtered")]
     public bool? Filtered { get; set; }
-
     [Key("name")]
     public string? Name { get; set; }
 }
@@ -263,7 +260,6 @@ public class BeatmapsResponse
 {
     [Key("success")]
     public required bool Success { get; set; }
-
     [Key("beatmaps")]
     public List<BeatmapResponse>? Beatmaps { get; set; }
 }
@@ -280,46 +276,32 @@ public class BeatmapResponse
 {
     [Key("found")]
     public required bool Found { get; set; }
-
     [Key("title")]
     public string? Title { get; set; }
-
     [Key("artist")]
     public string? Artist { get; set; }
-
     [Key("mapper")]
     public string? mapper { get; set; }
-
     [Key("difficulty")]
     public string? Difficulty { get; set; }
-
     [Key("beatmapset_id")]
     public int? BeatmapsetId { get; set; }
-
     [Key("difficulty_id")]
     public int? DifficultyId { get; set; }
-
     [Key("md5")]
     public string? Md5 { get; set; }
-
     [Key("bpm")]
     public float? Bpm { get; set; }
-
     [Key("sr")]
     public float? Sr { get; set; }
-
     [Key("ar")]
     public float? Ar { get; set; }
-
     [Key("cs")]
     public float? Cs { get; set; }
-
     [Key("hp")]
     public float? Hp { get; set; }
-
     [Key("od")]
     public float? Od { get; set; }
-
     [Key("local")]
     public bool Local = true; 
 }

@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using System.Text.Json.Serialization;
 using Main;
 using Main.Manager;
@@ -11,12 +8,15 @@ public class Downloader
 {
     private static List<Download> downloads = new();
     private static List<Mirror> mirrors = [];
+    private static List<int> rate_values = new() { 429, 503, 504 };
     private static Dictionary<string, BeatmapApiResponse> beatmap_cache = [];
     private static string token = "";
-    public static List<int> rate_values = new() { 429, 503, 504 };
+
     private static bool processing = true;
     private static Dictionary<string, int> download_progress = [];
     private static readonly object lock_object = new object();
+    
+    private static readonly SemaphoreSlim download_semaphore = new(3);
 
     public static async Task Initialize() 
     {
@@ -24,7 +24,6 @@ public class Downloader
 
         while (processing) 
         {
-            // ensure we have the access_token for the osu! api
             if (string.IsNullOrEmpty(token)) {
                 throw new Exception("null or empty token");
             }
@@ -37,9 +36,9 @@ public class Downloader
 
             // process next download
             var next = downloads.First();
-            await Process(next);
+            await ProcessParallel(next);
 
-            // only continue if still processing
+            // only continue if we're not "paused"
             if (!processing) {
                 break;
             }
@@ -86,7 +85,6 @@ public class Downloader
 
             // check if we are on a cooldown
             if (mirror.Cooldown != null) {
-
                 // only remove the cooldown after 5 min
                 if ((DateTime.Now - mirror.Cooldown.Value).TotalMinutes < 5) {
                     continue;
@@ -107,12 +105,9 @@ public class Downloader
 
             // add small cooldown if we get rate limited
             if (rate_values.Contains(status)) {
-
                 Console.WriteLine($"added rate limit to {mirror.Name}");
-
                 mirror.Cooldown = DateTime.Now;
                 mirrors[i] = mirror;
-
                 continue;
             }
 
@@ -124,7 +119,8 @@ public class Downloader
         return null;
     }
 
-    public static async Task Process(Download download) 
+    // nova funcao para processar beatmaps em paralelo
+    public static async Task ProcessParallel(Download download) 
     {
         if (download.Beatmaps?.Count == 0) {
             return;
@@ -133,45 +129,98 @@ public class Downloader
         // get current progress or start from 0
         var start_index = download_progress.TryGetValue(download.Name, out var progress) ? progress : 0;
         var total_count = download.Beatmaps?.Count ?? 0;
-
+        var tasks = new List<Task>();
+        
         for (int i = start_index; i < total_count; i++) {
-
             // ensure the download is not "paused"
             if (!processing) {
                 Console.WriteLine($"not processing {i} due to processing == false");
                 break;
             }
-            
-            var beatmap = download.Beatmaps[i];
-            var data = await GetBeatmapInformation(beatmap.Md5);
 
-            if (data == null) {
-                Console.WriteLine($"received null for {beatmap.Md5}");
-                continue;
-            }
-
-            var result = await GetOsz(data.Id);
-
-            if (result == null) {
-                Console.WriteLine($"failed to download beatmap from {data.Id}");
-                // @TODO: tell frontend something
-                continue;
-            }
-
-            var save_path = GetPath();
-
-            // if we dont have a save location, stop the current download
-            if (save_path == null) {
-                // @TODO: tell something to the frontend
-                processing = false;
+            if (download.Beatmaps == null) {
                 break;
             }
 
-            _ = Utils.SaveFile(result, save_path);
-
-            // save the current index (next beatmap to download)
-            download_progress[download.Name] = i + 1;
+            var beatmap = download.Beatmaps[i];
+            
+            var task = ProcessBeatmaps(download, beatmap, i);
+            tasks.Add(task);
         }
+
+        await Task.WhenAll(tasks);
+    }
+
+    private static async Task ProcessBeatmaps(Download download, DownloadBeatmap beatmap, int index) 
+    {
+        // wait for a new "slot"
+        await download_semaphore.WaitAsync();
+
+        // check if the download is still on the queue
+        lock (lock_object) {
+            if (!downloads.Contains(download)) {
+                Console.WriteLine($"cancelling {download.Name}");
+                download_semaphore.Release();
+                return;
+            }
+        }
+        
+        try {
+            await ProcessBeatmap(download, beatmap, index);
+        }
+        catch(Exception ex) {
+            Console.WriteLine(ex);
+        }
+
+        download_semaphore.Release();
+    }
+
+    private static async Task<bool> ProcessBeatmap(Download? download, DownloadBeatmap beatmap, int index) 
+    {
+        if (!processing) {
+            return false;
+        }
+
+        var data = await GetBeatmapInformation(beatmap.Md5);
+
+        if (data == null) {
+            Console.WriteLine($"received null for {beatmap.Md5}");
+            return false;
+        }
+
+        var result = await GetOsz(data.Id);
+
+        if (result == null) {
+            Console.WriteLine($"failed to download beatmap from {data.Id}");
+            // @TODO: tell something to the frontend
+            if (download != null) { }
+            return false;
+        }
+
+        var save_path = GetPath();
+
+        // if we dont have a save location, stop the current download
+        if (save_path == null) {
+            // @TODO: tell something to the frontend
+            if (download != null) { }
+            processing = false;
+            return false;
+        }
+
+        _ = Utils.SaveFile(result, save_path);
+
+        // save the current index (next beatmap to download)
+        if (download != null) { 
+            lock (lock_object) {
+                if (download_progress.TryGetValue(download.Name, out int value)) {
+                    download_progress[download.Name] = Math.Max(value, index + 1);
+                } else {
+                    download_progress[download.Name] = index + 1;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static void ResumeDownload() 
@@ -226,19 +275,18 @@ public class Downloader
         }
     }
 
-    public static void RemoveDownload(string Id) 
+    public static void RemoveDownload(string name) 
     {
         lock (lock_object) {
-            var index = downloads.FindIndex((m) => m.Id == Id);
+            var index = downloads.FindIndex((m) => m.Name == name);
             if (index != -1) {
                 downloads.RemoveAt(index);
             }
         }
     }
 
-    public static void Finish() {
-        processing = false;
-    }
+    public static List<Download> Downloads() => downloads; 
+    public static int Size() => downloads.Count;
 }
 
 public class BeatmapApiResponse {

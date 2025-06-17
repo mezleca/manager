@@ -80,9 +80,7 @@ export const get_beatmap = async (md5) => {
 
     // limit cache size
     if (beatmap_cache.size >= 500) {
-
         const first = beatmap_cache.keys().next().value;
-
         if (first != undefined) {
             beatmap_cache.delete(first);
         }

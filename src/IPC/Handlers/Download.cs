@@ -139,7 +139,7 @@ public class AddMirrorHandler : RequestResponseHandler<MirrorRequest, MirrorResp
 public class RemoveMirrorHandler : MessageHandler<MirrorRequest>
 {
     public override string MessageType => "remove_mirror";
-    protected override MirrorResponse? ProcessRequest(MirrorRequest request) => Downloader.RemoveMirror(request.Name);
+    protected override void ProcessMessage(MirrorRequest request) => Downloader.RemoveMirror(request.Name);
 }
 
 // ts pmo

@@ -12,7 +12,6 @@ export const get_selected_collection = () => {
     
     for (let i = 0; i < all_collections.length; i++) {
         const collection = all_collections[i];
-        
         if (collection.classList.contains("active")) {
             const name = collection.querySelector(".collection-name").innerText;
             return { name: name, element: collection };
@@ -25,7 +24,7 @@ export const get_selected_collection = () => {
 export const manager_list = create_virtual_list("collection-list", document.querySelector(".manager-beatmaps-container"));
 
 // get collections, create listeners, etc...
-export const initialize_collections = async () => {
+export const show_collections = async () => {
     const container = document.querySelector(".collections");
     const result = await ipc.send("get_collections");
 
@@ -45,7 +44,10 @@ export const initialize_collections = async () => {
             document.querySelector(".collection-item.active")?.classList.remove("active");
             new_card.container.classList.add("active");
 
+            // get will be used to get current element id 
             manager_list.get = (index) => collection.hashes[index];
+
+            // create element yep
             manager_list.create = ((index) => {
                 return { element: create_beatmap_card(), id: collection.hashes[index] };
             });
@@ -54,6 +56,8 @@ export const initialize_collections = async () => {
                 const hash = collection.hashes[index];
                 const beatmap = await get_beatmap(hash);
 
+                // to remove element from our colletion
+                // will also remove from virtual list forcing a render
                 const remove_card = () => {
                     collection.hashes.splice(index, 1); 
                     manager_list.remove(element);

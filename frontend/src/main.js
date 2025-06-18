@@ -1,6 +1,6 @@
 import { initialize_config, config, load_files } from "./config.js";
 import { ipc } from "./ipc/message.js";
-import { initialize_collections } from "./manager/manager.js";
+import { show_collections } from "./manager/manager.js";
 
 const tabs = document.querySelectorAll(".tab");
 const tab_contents = document.querySelectorAll(".tab-content");
@@ -66,5 +66,5 @@ window.addEventListener("contextmenu", (event) => event.preventDefault());
 		return;
 	}
 
-	await initialize_collections();
+	await show_collections();
 })();

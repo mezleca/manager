@@ -39,8 +39,8 @@ html {
     --border-accent: #e91e6350;
 
     --gradient-primary: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
-    --gradient-bg: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
-    --gradient-card: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    --gradient-bg: linear-gradient(135deg, #161616 0%, #191919 100%);
+    --gradient-card: linear-gradient(135deg, #161616 0%, #191919 100%);
     --header-height: 60px;
     --transition-delay: 0.3s;
     --context-fade-delay: 0.15s;
@@ -78,7 +78,6 @@ body {
     justify-content: space-between;
     padding: 0 20px;
     border-bottom: 1px solid var(--header-border-color);
-    -webkit-app-region: drag;
 }
 
 .header-left {
@@ -89,13 +88,14 @@ body {
 
 .app-title {
     font-size: 16px;
-    color: var(--text-secondary);
+    color: var(--accent-color);
+    -webkit-app-region: drag;
 }
 
 .tabs {
     display: flex;
     gap: 30px;
-    -webkit-app-region: no-drag;
+    -webkit-app-region: drag;
 }
 
 .tab {
@@ -659,9 +659,6 @@ body {
     pointer-events: none;
 }
 
-.small-card:hover .beatmap-controls {
-}
-
 .control-icon {
     width: 24px;
     height: 24px;
@@ -819,6 +816,22 @@ body {
     -ms-overflow-style: none; 
 }
 
+button {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-color-half);
+}
+
 .info-box {
     padding: 24px;
     height: 100%;
@@ -827,8 +840,6 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
-
-.info-box-header { }
 
 .info-box-title {
     color: var(--accent-color);
@@ -889,10 +900,13 @@ body {
 
 .file-input {
     position: absolute;
+    top: 0;
+    left: 0;
     opacity: 0;
     width: 100%;
     height: 100%;
     cursor: pointer;
+    z-index: 2;
 }
 
 .file-input-display {
@@ -903,8 +917,11 @@ body {
     text-align: center;
     transition: all var(--context-fade-delay) ease;
     cursor: pointer;
+    position: relative;
+    z-index: 1;
 }
 
+.file-input-wrapper:hover .file-input-display,
 .file-input-display:hover {
     border-color: var(--accent-color);
     background-color: var(--accent-color-half);

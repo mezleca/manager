@@ -30,9 +30,7 @@ const switch_tab = (id) => {
 };
 
 tabs.forEach((tab) => {
-	tab.addEventListener("click", async () => {
-		switch_tab(tab.getAttribute("data-tab"));
-	});
+	tab.addEventListener("click", () => switch_tab(tab.getAttribute("data-tab")));
 });
 
 // setup expandable buttons
@@ -41,6 +39,14 @@ expand_buttons.forEach((btn, index) => {
         btn.classList.toggle("active");
         search_expandeds[index].classList.toggle("active");
     });
+});
+
+document.addEventListener("keydown", (e) => {
+	// custom reload (webkit2gtk sucks)
+	if (e.ctrlKey && e.key == "r") {
+		e.preventDefault();
+		window.location.reload();
+	}
 });
 
 // removd until i implement window movement with chromeless mode
@@ -54,9 +60,10 @@ window.addEventListener("mousewheel", (e) => { if (e.ctrlKey) e.preventDefault()
 open_links_on_browser();
 
 // disable default context menu
-window.addEventListener("contextmenu", (event) => event.preventDefault());
+// window.addEventListener("contextmenu", (event) => event.preventDefault());
 
-(async () => {
+window.addEventListener("load", async () => {
+	
 	await initialize_config();
 	await ipc.send("update_config", config);
 
@@ -67,4 +74,4 @@ window.addEventListener("contextmenu", (event) => event.preventDefault());
 	}
 
 	await show_collections();
-})();
+});

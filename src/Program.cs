@@ -13,19 +13,21 @@ public class Entry
         if (Window.is_linux) {
             
             var LIBVA_DRIVER_NAME = Environment.GetEnvironmentVariable("LIBVA_DRIVER_NAME");
+            var XDG_SESSION_TYPE = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE");
+
+            // force wayland
+            if (XDG_SESSION_TYPE == "wayland") {      
+                _ = setenv("GDK_BACKEND", "wayland", 1);
+            }
       
+            // fix webview not loading due to some stupid ass nvidia bug
             if (LIBVA_DRIVER_NAME == "nvidia") {
-                // prevent webview not loading due to some stupid ass nvidia bug
                 _ = setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", 1);
-                _ = setenv("WEBKIT_DMABUF_RENDERER_DISABLE_GBM", "1", 1);
             }
 
-            // @TODO: chjeck if whatever webview used on windows is present
-            // also use showmessagebox or something
-
-            // @NOTE: may vary depending on the distro? idk
-            if (!File.Exists("/usr/lib/libwebkit2gtk-4.0.so") && !Directory.Exists("/usr/lib/webkit2gtk-4.0")) {
-                var command = "notify-send --app-name='manager' -h 'string:sound-name:message-new-instant' 'missing libwebkit2gtk' 'please install webkit2gtk on your distro vro'";
+            // check if we have webkit2gtk installed
+            if (!File.Exists("/usr/lib/libwebkit2gtk-4.1.so") && !Directory.Exists("/usr/lib/webkit2gtk-4.1")) {
+                var command = "notify-send --app-name='manager' -h 'string:sound-name:message-new-instant' 'missing webkit2gtk-4.1' 'please install webkit2gtk-4.1 bro'";
                 Utils.Exec(command);
                 Environment.Exit(1);
             }

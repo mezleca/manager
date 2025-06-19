@@ -21,7 +21,10 @@ public class Window
             .SetUseOsDefaultSize(false)
             .SetSize(1366, 800)
             .SetMinSize(1024, 700)
+            .SetSmoothScrollingEnabled(true)
+            .SetWebSecurityEnabled(false)
             .Center()
+            .SetDevToolsEnabled(true)
             .SetResizable(true)
             .SetLogVerbosity(0)
             .Load("frontend/index.html");

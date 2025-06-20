@@ -35,6 +35,14 @@ also using c# (Photino) instead of go (wails)
 - [ ] *open links on browser
 
 #### frontend related stuff
+- [ ] *get missing beatmaps
+- [ ] *export collection
+- [ ] *export beatmaps
+- [ ] *import collections (osdb and stable db)
+- [ ] *get from player
+- [ ] *get from osu!Collector
+- [ ] merge collections
+- [ ] remove collections
 - [ ] discover tab (get new beatmaps using the osu! api)
 - [ ] *browse tab (browse all downloaded beatmaps)
 - [x] better color scheme (more darker)
